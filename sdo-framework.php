@@ -29,8 +29,9 @@ define('SDO_TEXTDOMAIN', 'sdo');
 define('SDO_CURRENT_THEME', $current_theme);
 define('SDO_CURRENT_PHP',substr(phpversion(), 0, strpos(phpversion(), '.', strpos(phpversion(), '.') + 1)));
 
+include_once SDO_INC.'functions.php';
 include_once SDO_CLSS.'core.class.php';
 include_once SDO_CLSS.'secure.class.php';
-include_once SDO_CLSS.'dashboard.class.php';
 
+# customize framework
 include_once 'config.php';
