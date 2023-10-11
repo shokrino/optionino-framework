@@ -23,7 +23,10 @@ if (!class_exists('SDO')) {
             self::$settings[$dev_name] = $settings;
         }
         public static function set_tab($dev_name, $tab_settings) {
-            self::$tabs[$dev_name] = $tab_settings;
+            if (!isset(self::$tabs[$dev_name])) {
+                self::$tabs[$dev_name] = array();
+            }
+            self::$tabs[$dev_name][] = $tab_settings;
         }
         public function create_menu() {
             $settings = self::$settings;

@@ -43,5 +43,14 @@ if (!class_exists('SDO')) {
         public static function tab_end() {
             echo '</div>';
         }
+        public static function tab_buttons($dev_name) {
+            $tabsArray = SDO::$tabs;
+            if (isset($tabsArray[$dev_name]) && is_array($tabsArray[$dev_name])) {
+                foreach ($tabsArray[$dev_name] as $tab) {
+                    echo $tab['id'];
+                    echo '<br>';
+                }
+            }
+        }
     }
 }

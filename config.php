@@ -5,6 +5,7 @@
 SDO::set_config('sdo_default',array(
     'dev_title' => SDO_NAME,
     'dev_version' => SDO_VERSION,
+    'logo_url' => '',
     'dev_textdomain' > SDO_TEXTDOMAIN,
     'menu_type' => 'menu',
     'menu_title' => esc_html__('Default Options', 'sdo'),
@@ -36,6 +37,22 @@ SDO::set_tab('sdo_default',array(
     ),
 ));
 
+SDO::set_tab('sdo_default',array(
+    'id' => 'tab_general_2',
+    'title' => esc_html__('General Tab 2', 'sdo'),
+    'desc' => esc_html__('General Tab 2', 'sdo'),
+    'icon' => 'el-icon-home',
+    'fields' => array(
+        array(
+            'id' => 'test-option-1',
+            'type' => 'text',
+            'title' => esc_html__('Test Text', 'sdo'),
+            'subtitle' => esc_html__('test subtitle', 'sdo'),
+            'desc' => esc_html__('test description', 'sdo'),
+            'default' => esc_html__('Default Text', 'sdo'),
+        ),
+    ),
+));
 
 
 //SDO::set_config('sdo_drfault',array(
