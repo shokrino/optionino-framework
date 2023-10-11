@@ -1,3 +1,6 @@
+:root {
+    --sdo-main-color: #5D3FD3;
+}
 .flex {
     display: -webkit-box;
     display: -ms-flexbox;
@@ -33,14 +36,16 @@
 }
 .sdo-section {
     flex-wrap: wrap;
-    width: 100%;
     padding: 3%;
     background: white;
     border-radius: 25px;
     min-height: 600px;
+    flex-direction: row-reverse;
+}
+.sdo-section.rtl {
+    flex-direction: row;
 }
 .sdo-section .tab {
-    float: right;
     width: 30%;
     height: max-content;
 }
@@ -52,4 +57,49 @@
 .sdo-section .tab-information > img {
     width: 160px;
     height: auto;
+}
+.sdo-section .tablinks {
+    background-color: transparent;
+    color: black;
+    padding: 22px 16px;
+    width: 100%;
+    border: none;
+    outline: none;
+    text-align: right;
+    cursor: pointer;
+    transition: 0s;
+    justify-content: space-between;
+    flex-direction: row;
+    align-items: center;
+    padding-right: 25px;
+    border-right: 3px solid transparent;
+    border-top: 1px solid transparent;
+    border-bottom: 1px solid transparent;
+}
+.sdo-section .tab button.active,
+.sdo-section .tab button:hover {
+    border-right: 3px solid var(--sdo-main-color);
+    transition: 200ms;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+    box-shadow: -5px 3px 11px -2px #36454f0d;
+}
+.sdo-tab-titles-box {
+    display: flex;
+    justify-content: right;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 5px;
+}
+.sdo-title-tab-options {
+    font-size: 17px;
+    font-weight: 600;
+    color: #36454f;
+}
+.sdo-tab-content-outer {
+    min-height: 100%;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    row-gap: 15px;
 }
