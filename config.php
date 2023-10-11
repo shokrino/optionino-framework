@@ -9,7 +9,7 @@ SDO::set_config('sdo_default',array(
     'menu_type' => 'menu',
     'menu_title' => esc_html__('Default Options', 'sdo'),
     'page_title' => esc_html__('Default Options', 'sdo'),
-    'page_parent' => 'options.php',
+    'page_parent' => 'themes.php',
     'page_capability' => 'manage_options',
     'page_slug' => 'sdo_default'.'_settings',
     'icon_url' => '',

@@ -1,0 +1,50 @@
+.flex {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+}
+.flex-center {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+.flex-center-in-col {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+.relative {
+    position: relative;
+}
+.sdo-header {
+    flex-wrap: wrap;
+    flex-direction: column;
+    background: #fff;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 5px 14px -10px #00000070;
+}
+.sdo-section {
+    flex-wrap: wrap;
+    width: 100%;
+    padding: 3%;
+    background: white;
+    border-radius: 25px;
+    min-height: 600px;
+}
+.sdo-section .tab {
+    float: right;
+    width: 30%;
+    height: max-content;
+}
+.tab-information {
+    padding: 25px;
+    row-gap: 10px;
+}
