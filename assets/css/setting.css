@@ -116,3 +116,19 @@
     flex-direction: column;
     row-gap: 15px;
 }
+.sdo-options-save-box {
+    display: flex;
+    justify-content: end;
+    padding: 0 3%;
+}
+.sdo-options-save-box .submit-sdo {
+    display: flex;
+    background: var(--sdo-main-color);
+    border: 2px solid transparent;
+    border-radius: 9px;
+    padding: 8px 25px 10px;
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
