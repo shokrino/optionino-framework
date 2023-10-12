@@ -36,25 +36,6 @@ if (!class_exists('SDO')) {
             </div>
             </form>';
         }
-        public static function form_fields($dev_name) {
-            $tabsArray = SDO::$tabs;
-            if (isset($tabsArray[$dev_name]) && is_array($tabsArray[$dev_name])) {
-                foreach ($tabsArray[$dev_name] as $tab) { ?>
-                    <div id="<?php echo $tab['id']; ?>" class="tabcontent">
-                    <?php
-                    $fields = $tab['fields'];
-                    if (isset($fields) && is_array($fields)) {
-                        foreach ($fields as $field) {
-                            var_dump($field);
-                            echo '<br>';
-                        }
-                    }
-                    ?>
-                    </div>
-                    <?php
-                }
-            }
-        }
         public static function section_start($class) {
             if (is_rtl()) {
                 $class = $class.' rtl';
@@ -110,6 +91,45 @@ if (!class_exists('SDO')) {
                     </button>
                     <?php
                 }
+            }
+        }
+        public static function form_fields($dev_name) {
+            $tabsArray = SDO::$tabs;
+            if (isset($tabsArray[$dev_name]) && is_array($tabsArray[$dev_name])) {
+                foreach ($tabsArray[$dev_name] as $tab) { ?>
+                    <div id="<?php echo $tab['id']; ?>" class="tabcontent">
+                        <?php
+                        $fields = $tab['fields'];
+                        if (isset($fields) && is_array($fields)) {
+                            foreach ($fields as $field) {
+                                SDO_Builder::field_option($field);
+                            }
+                        }
+                        ?>
+                    </div>
+                    <?php
+                }
+            }
+        }
+        public static function field_option($field) {
+            $type = $field['type'];
+            switch ($type) {
+                case "text":
+                    ?>
+                    <div class="sdo-box-option">
+                        <label class="sdo-form-label"
+                               for="<?php echo $field['id']; ?>"><?php echo $field['title']; ?></label>
+                        <input type="text" class="sdo-input" id="<?php echo $field['id']; ?>" name="<?php echo $field['id']; ?>"
+                               value="<?php echo $field['default']; ?>">
+                        <p><?php echo $field['desc']; ?></p>
+                    </div>
+                    <?php
+                    break;
+                case "switch":
+                    echo "Your favorite color is yellow!";
+                    break;
+                default:
+                    echo '';
             }
         }
     }
