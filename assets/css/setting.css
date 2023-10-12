@@ -76,6 +76,16 @@
     border-top: 1px solid transparent;
     border-bottom: 1px solid transparent;
 }
+.sdo-section .tabcontent {
+    padding: 5px 20px;
+    border-right: 3px solid var(--sdo-main-color);
+    width: 100%;
+    height: 100%;
+    border-radius: 20px 0 0 20px;
+}
+.sdo-section .tabcontent:not(:first-child) {
+    display: none;
+}
 .sdo-section .tab button.active,
 .sdo-section .tab button:hover {
     border-right: 3px solid var(--sdo-main-color);
@@ -83,6 +93,9 @@
     border-top: 1px solid #eee;
     border-bottom: 1px solid #eee;
     box-shadow: -5px 3px 11px -2px #36454f0d;
+}
+.sdo-section .tab button.active svg,.sdo-section .tab button:hover svg {
+    stroke: var(--sdo-main-color);
 }
 .sdo-tab-titles-box {
     display: flex;

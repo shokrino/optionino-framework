@@ -39,7 +39,9 @@ if (!class_exists('SDO')) {
         public static function form_fields($dev_name) {
             $tabsArray = SDO::$tabs;
             if (isset($tabsArray[$dev_name]) && is_array($tabsArray[$dev_name])) {
-                foreach ($tabsArray[$dev_name] as $tab) {
+                foreach ($tabsArray[$dev_name] as $tab) { ?>
+                    <div id="<?php echo $tab['id']; ?>" class="tabcontent">
+                    <?php
                     $fields = $tab['fields'];
                     if (isset($fields) && is_array($fields)) {
                         foreach ($fields as $field) {
@@ -47,6 +49,9 @@ if (!class_exists('SDO')) {
                             echo '<br>';
                         }
                     }
+                    ?>
+                    </div>
+                    <?php
                 }
             }
         }
@@ -74,7 +79,7 @@ if (!class_exists('SDO')) {
             if (isset($tabsArray[$dev_name]) && is_array($tabsArray[$dev_name])) {
                 foreach ($tabsArray[$dev_name] as $tab) {
                     ?>
-                    <button class="tablinks flex" onclick="openTabSDO(event, <?php echo $tab['id']; ?>)">
+                    <button class="tablinks flex" onclick="openTabSDO(event, '<?php echo $tab['id']; ?>')">
                         <div class="sdo-tab-titles-box">
                             <div class="sdo-title-tab-options">
                                 <?php echo $tab['title']; ?>

@@ -81,6 +81,7 @@ if (!class_exists('SDO')) {
         }
         public function admin_scripts() {
             wp_enqueue_style( 'sdo-settings-page', SDO_ASSETS.'css/setting.css', array(), false, 'all');
+            wp_enqueue_script( 'sdo-settings-page', SDO_ASSETS.'js/setting.js' , array() , false , true);
         }
         public function wp_head() {
 
