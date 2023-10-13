@@ -70,6 +70,14 @@ SDO::set_tab('sdo_default',array(
             'default' => esc_html__('Default Text', 'sdo'),
         ),
         array(
+            'id' => 'test-option-5',
+            'type' => 'switcher',
+            'title' => esc_html__('Test switcher', 'sdo'),
+            'subtitle' => esc_html__('switcher subtitle', 'sdo'),
+            'desc' => esc_html__('switcher description', 'sdo'),
+            'default' => false,
+        ),
+        array(
             'id' => 'test-option-3',
             'type' => 'text',
             'title' => esc_html__('Test Text 3', 'sdo'),

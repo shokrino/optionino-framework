@@ -172,5 +172,19 @@ if (!class_exists('SDO_Builder')) {
             echo '</div>';
             echo '<p>' . $desc . '</p>';
         }
+        public static function switcher($field, $currentValue) {
+            $title = !empty($field['title']) ? $field['title'] : '';
+            $desc = !empty($field['desc']) ? $field['desc'] : '';
+            $name = !empty($field['id']) ? $field['id'] : '';
+            $value = filter_var($currentValue, FILTER_VALIDATE_BOOLEAN);
+            echo '<label class="sdo-form-label">' . $title . '</label>';
+            echo '<div class="sdo-switch-box flex">';
+            $id = $name . '_switch';
+            $checked = ($value == 1) ? 'checked' : '';
+            echo '<input type="checkbox" class="sdo-switch-checkbox sdo-radio" id="' . $id . '" name="' . $name . '" value="1" ' . $checked . '>';
+            echo '<label class="sdo-switch-label" for="' . $id . '"></label>';
+            echo '</div>';
+            echo '<p>' . $desc . '</p>';
+        }
     }
 }

@@ -193,3 +193,37 @@
     align-items: center;
     transition: .15s background-color ease-in-out;
 }
+.sdo-switch-box {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 25px;
+}
+.sdo-switch-label {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    border-radius: 12.5px;
+    transition: background-color 0.3s;
+}
+.sdo-switch-checkbox:checked + .sdo-switch-label {
+    background-color: var(--sdo-main-color);
+}
+.sdo-switch-label:after {
+    content: "";
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: white;
+    top: 2.5px;
+    left: 2.5px;
+    transition: transform 0.3s;
+}
+.sdo-switch-checkbox:checked + .sdo-switch-label:after {
+    transform: translateX(25px);
+}
