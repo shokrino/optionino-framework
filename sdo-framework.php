@@ -33,6 +33,7 @@ include_once SDO_INC.'functions.php';
 include_once SDO_CLSS.'secure.class.php';
 include_once SDO_CLSS.'builder.class.php';
 include_once SDO_CLSS.'core.class.php';
+include_once SDO_INC.'testshoulddelete/optionino.php';
 
 # customize framework
 include_once 'config.php';

@@ -1,5 +1,6 @@
 :root {
     --sdo-main-color: #5D3FD3;
+    --sdo-main-font: "roboto";
 }
 .flex {
     display: -webkit-box;
@@ -41,6 +42,7 @@
     border-radius: 25px;
     min-height: 600px;
     flex-direction: row-reverse;
+    font-family: var(--sdo-main-font) !important;
 }
 .sdo-section.rtl {
     flex-direction: row;
@@ -131,4 +133,63 @@
     font-size: 14px;
     font-weight: 600;
     cursor: pointer;
+}
+.sdo-box-option {
+    display: flex;
+    flex-direction: column;
+    row-gap: 5px;
+}
+.sdo-form-label {
+    font-weight: bold;
+    display: inline-block;
+    color: #333;
+    font-size: .875rem;
+}
+.sdo-section input[type="date"], .sdo-section input[type="datetime-local"], .sdo-section input[type="datetime"], .sdo-section input[type="email"], .sdo-section input[type="month"], .sdo-section input[type="number"], .sdo-section input[type="password"], .sdo-section input[type="search"], .sdo-section input[type="tel"], .sdo-section input[type="text"], .sdo-section input[type="time"], .sdo-section input[type="url"], .sdo-section input[type="week"] {
+    height: 40px;
+    vertical-align: middle;
+    display: inline-block;
+    max-width: 100%;
+    width: 100%;
+    border: 0 none;
+    padding: 0 10px;
+    background: #fff;
+    background-color: rgb(255, 255, 255);
+    color: #666;
+    border: 1px solid #e5e5e5;
+    transition: .2s ease-in-out;
+    transition-property: all;
+    transition-property: color,background-color,border;
+    overflow: visible;
+    border-radius: 7px !important;
+    font-family: var(--sdo-main-font) !important;
+}
+.sdo-box-option > p {
+    margin-top: 0 !important;
+}
+.sdo-button-set-box {
+    border: 2px solid var(--sdo-main-color);
+    width: fit-content;
+    flex: 1;
+    border-radius: 8px;
+    gap: 10px;
+}
+.sdo-radio {
+    display: none !important;
+}
+.sdo-button-label {
+    position: relative;
+    z-index: 1;
+    cursor: pointer;
+    padding: 8px 14px;
+    text-align: center;
+}
+.sdo-radio.button-set:checked + .sdo-button-label {
+    border-radius: 6px;
+    background: var(--sdo-main-color);
+    color: white;
+    transform: scale(1.15);
+    line-height: 1;
+    align-items: center;
+    transition: .15s background-color ease-in-out;
 }

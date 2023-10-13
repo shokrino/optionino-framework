@@ -6,7 +6,7 @@
  * @since 1.0.0
  *
  */
-if (!class_exists('SDO')) {
+if (!class_exists('SDO_Builder')) {
     class SDO_Builder {
         public function __construct() {}
         public static function logo($dev_name) {
@@ -112,25 +112,65 @@ if (!class_exists('SDO')) {
             }
         }
         public static function field_option($field) {
-            $type = $field['type'];
-            switch ($type) {
-                case "text":
-                    ?>
-                    <div class="sdo-box-option">
-                        <label class="sdo-form-label"
-                               for="<?php echo $field['id']; ?>"><?php echo $field['title']; ?></label>
-                        <input type="text" class="sdo-input" id="<?php echo $field['id']; ?>" name="<?php echo $field['id']; ?>"
-                               value="<?php echo $field['default']; ?>">
-                        <p><?php echo $field['desc']; ?></p>
-                    </div>
-                    <?php
-                    break;
-                case "switch":
-                    echo "Your favorite color is yellow!";
-                    break;
-                default:
-                    echo '';
+            ?>
+            <div class="sdo-box-option">
+                <?php
+                $type = $field['type'];
+                $currentValue = '';
+                if (method_exists(__CLASS__, $type)) {
+                    self::$type($field, $currentValue);
+                } ?>
+            </div>
+            <?php
+        }
+        public static function text($field,$currentValue) {
+            $title = !empty($field['title']) ? $field['title'] : '';
+            $desc = !empty($field['desc']) ? $field['desc'] : '';
+            $name = !empty($field['id']) ? $field['id'] : '';
+            $value = empty($currentValue) ? $currentValue : $field['default'];
+            ?>
+            <label class="sdo-form-label" for="<?php echo $name; ?>"><?php echo $title; ?></label>
+            <input type="text" class="sdo-input" id="<?php echo $name; ?>" name="<?php echo $name; ?>"
+                   value="<?php echo $value; ?>">
+            <p><?php echo $desc; ?></p>
+            <?php
+        }
+        public static function textarea($field,$currentValue) {
+            $title = !empty($field['title']) ? $field['title'] : '';
+            $desc = !empty($field['desc']) ? $field['desc'] : '';
+            $name = !empty($field['id']) ? $field['id'] : '';
+            $value = empty($currentValue) ? $currentValue : $field['default'];
+            ?>
+            <label class="sdo-form-label" for="<?php echo $name; ?>"><?php echo $title; ?></label>
+            <textarea class="sdo-input" id="<?php echo $name; ?>" name="<?php echo $name; ?>">
+                <?php echo $value; ?>
+            </textarea>
+            <p><?php echo $desc; ?></p>
+            <?php
+        }
+        public static function buttonset($field, $currentValue) {
+            $title = !empty($field['title']) ? $field['title'] : '';
+            $desc = !empty($field['desc']) ? $field['desc'] : '';
+            $name = !empty($field['id']) ? $field['id'] : '';
+            $options = !empty($field['options']) && is_array($field['options']) ? $field['options'] : array();
+            $value = empty($currentValue) ? $field['default'] : $currentValue;
+            echo '<label class="sdo-form-label">' . $title . '</label>';
+            echo '<div class="sdo-button-set-box flex">';
+            $index = 0;
+            foreach ($options as $key => $label) {
+                $index++;
+                $id = $name.$index;
+                if ($key != $value && $index == 1) {
+                    $active = true;
+                } else {
+                    $active = false;
+                }
+                $checked = ($active) ? 'checked' : '';
+                echo '<input type="radio" class="sdo-radio button-set" id="' . $id . '" name="' . $name . '" value="' . esc_attr($key) . '" ' . $checked . '>';
+                echo '<label class="sdo-button-label flex" for="'.$id.'">' . esc_html($label) . '</label>';
             }
+            echo '</div>';
+            echo '<p>' . $desc . '</p>';
         }
     }
 }
