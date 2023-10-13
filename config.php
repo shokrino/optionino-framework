@@ -75,7 +75,7 @@ SDO::set_tab('sdo_default',array(
             'title' => esc_html__('Test switcher', 'sdo'),
             'subtitle' => esc_html__('switcher subtitle', 'sdo'),
             'desc' => esc_html__('switcher description', 'sdo'),
-            'default' => false,
+            'default' => true,
         ),
         array(
             'id' => 'test-option-3',

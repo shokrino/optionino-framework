@@ -176,7 +176,7 @@ if (!class_exists('SDO_Builder')) {
             $title = !empty($field['title']) ? $field['title'] : '';
             $desc = !empty($field['desc']) ? $field['desc'] : '';
             $name = !empty($field['id']) ? $field['id'] : '';
-            $value = filter_var($currentValue, FILTER_VALIDATE_BOOLEAN);
+            $value = filter_var(empty($currentValue) ? $field['default'] : $currentValue, FILTER_VALIDATE_BOOLEAN);
             echo '<label class="sdo-form-label">' . $title . '</label>';
             echo '<div class="sdo-switch-box flex">';
             $id = $name . '_switch';
