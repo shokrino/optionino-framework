@@ -12,6 +12,13 @@ document.addEventListener("DOMContentLoaded", function() {
     form.addEventListener('submit', function(event) {
         event.preventDefault();
         let formData = new FormData(form);
+        let checkboxes = form.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach(checkbox => {
+            let checkboxName = checkbox.name;
+            if (!formData.has(checkboxName)) {
+                formData.set(checkboxName, 'off');
+            }
+        });
         formData.append('action', 'save_sdo_data');
         formData.append('security', data_sdo.nonce);
         let xhr = new XMLHttpRequest();

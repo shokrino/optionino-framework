@@ -26,7 +26,7 @@ if (!class_exists('SDO')) {
             if (!isset(self::$tabs[$dev_name])) {
                 self::$tabs[$dev_name] = array();
             }
-            self::$tabs[$dev_name][] = $tab_settings;
+            self::$tabs[$dev_name][$tab_settings['id']] = $tab_settings;
         }
         public function create_menu() {
             $settings = self::$settings;
@@ -63,11 +63,7 @@ if (!class_exists('SDO')) {
             }
         }
         public function page_content($settings) {
-            SDO::admin_scripts();
-            SDO_Builder::container_start();
-            SDO_Builder::title($settings['dev_title']);
             require_once SDO_TMPL.'setting-page.php';
-            SDO_Builder::container_end();
             add_filter( 'admin_footer_text', [$this,'admin_footer_text'] );
         }
         public function admin_footer_text() {

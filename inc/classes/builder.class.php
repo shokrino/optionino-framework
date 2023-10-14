@@ -126,7 +126,6 @@ if (!class_exists('SDO_Builder')) {
                 <?php
                 $type = $field['type'];
                 $currentValue = sdo_option($dev_name, $field['id']);
-                var_dump($currentValue);
                 if (method_exists(__CLASS__, $type)) {
                     self::$type($field, $currentValue);
                 } ?>
@@ -192,7 +191,7 @@ if (!class_exists('SDO_Builder')) {
             echo '<label class="sdo-form-label">' . $title . '</label>';
             echo '<div class="sdo-switch-box flex">';
             $id = $name . '_switch';
-            $checked = ($value) ? 'checked' : '';
+            $checked = ($value == "on") ? 'checked' : '';
             echo '<input type="checkbox" class="sdo-switch-checkbox sdo-radio" id="' . $id . '" name="' . $name . '" ' . $checked . '>';
             echo '<label class="sdo-switch-label" for="' . $id . '"></label>';
             echo '</div>';
