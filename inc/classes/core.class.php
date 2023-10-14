@@ -47,31 +47,34 @@ if (!class_exists('SDO')) {
             $fields[$tab['id']] = $tab_settings['fields'];
             self::set_fields($dev_name, $fields);
         }
-        public static function set_fields($dev_name,$tabfields) {
+        public static function set_fields($dev_name, $tabfields) {
             if (!isset(self::$fields[$dev_name])) {
                 self::$fields[$dev_name] = array();
             }
+
             $existingFieldIds = [];
             foreach (self::$fields[$dev_name] as $existingTabFields) {
                 foreach ($existingTabFields as $existingField) {
                     $existingFieldIds[] = $existingField['id'];
                 }
             }
+
             foreach ($tabfields as $tab => $fields) {
-                foreach ($fields as $field) {
-                    if (in_array($field['id'], $existingFieldIds)) {
-                        add_action('admin_notices', function() use ($field, $tab) {
-                            echo '<div class="error"><p>' . esc_html__('Field ID "' . $field['id'] . '" is already in use. Please use a unique ID.', 'sdo') . '</p></div>';
+                $tabFieldIds = array_column($fields, 'id');
+                foreach ($tabFieldIds as $fieldId) {
+                    if (in_array($fieldId, $existingFieldIds) || is_id_duplicate($tabFieldIds, $fieldId)) {
+                        add_action('admin_notices', function() use ($fieldId, $tab) {
+                            echo '<div class="error"><p>' . esc_html__('Field ID "' . $fieldId . '" is already in use. Please use a unique ID.', 'sdo') . '</p></div>';
                         });
                         return;
                     }
                 }
             }
+
             foreach ($tabfields as $tab => $fields) {
                 self::$fields[$dev_name][$tab] = $fields;
             }
         }
-
         public function create_menu() {
             $settings = self::$settings;
             $tabs = self::$tabs;
