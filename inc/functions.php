@@ -8,5 +8,8 @@
  */
 function sdo_option($dev_name, $field) {
     $array = get_option($dev_name, array());
-    return $array[$field];
+    if (is_array($array) && (is_string($field) || is_int($field)) && array_key_exists($field, $array)) {
+        return $array[$field];
+    }
+    return NULL;
 }

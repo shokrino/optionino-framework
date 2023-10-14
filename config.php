@@ -99,7 +99,7 @@ SDO::set_tab('sdo_default',array(
     'icon' => 'el-icon-home',
     'fields' => array(
         array(
-            'id' => 'test-option-1',
+            'id' => 'test-option-8',
             'type' => 'text',
             'title' => esc_html__('Test Text', 'sdo'),
             'subtitle' => esc_html__('test subtitle', 'sdo'),

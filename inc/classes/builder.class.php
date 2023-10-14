@@ -11,12 +11,20 @@ if (!class_exists('SDO_Builder')) {
         public function __construct() {}
         public static function logo($dev_name) {
             $settingsArray = SDO::$settings;
-            $settings = $settingsArray[$dev_name];
-            $logo_url = $settings['logo_url'];
-            if (!empty($logo_url)) {
-                return $logo_url;
+            foreach ($settingsArray as $dev_name => $settings) {
+                $option = get_option($dev_name,NULL);
+                if (is_null($option) or empty($option) or $option == []) {
+                    SDO_Ajax_Handler::defaults($dev_name);
+                }
             }
-            return SDO_ASSETS.'img/logo.png';
+            $settings = $settingsArray[$dev_name];
+            if (isset($settings)) {
+                $logo_url = $settings["logo_url"];
+                if (!empty($logo_url)) {
+                    return $logo_url;
+                }
+            }
+            return SDO_ASSETS . 'img/logo.png';
         }
         public static function title($title) {
             echo '<h1 class="sdo-header-title wp-heading-inline">'.$title.'</h1>';
@@ -103,7 +111,7 @@ if (!class_exists('SDO_Builder')) {
                         $fields = $tab['fields'];
                         if (isset($fields) && is_array($fields)) {
                             foreach ($fields as $field) {
-                                SDO_Builder::field_option($field);
+                                SDO_Builder::field_option($dev_name,$field);
                             }
                         }
                         ?>
@@ -112,12 +120,13 @@ if (!class_exists('SDO_Builder')) {
                 }
             }
         }
-        public static function field_option($field) {
+        public static function field_option($dev_name,$field) {
             ?>
             <div class="sdo-box-option">
                 <?php
                 $type = $field['type'];
-                $currentValue = '';
+                $currentValue = sdo_option($dev_name, $field['id']);
+                var_dump($currentValue);
                 if (method_exists(__CLASS__, $type)) {
                     self::$type($field, $currentValue);
                 } ?>
@@ -128,7 +137,7 @@ if (!class_exists('SDO_Builder')) {
             $title = !empty($field['title']) ? $field['title'] : '';
             $desc = !empty($field['desc']) ? $field['desc'] : '';
             $name = !empty($field['id']) ? $field['id'] : '';
-            $value = empty($currentValue) ? $currentValue : $field['default'];
+            $value = !empty($currentValue) ? $currentValue : '';
             ?>
             <label class="sdo-form-label" for="<?php echo $name; ?>"><?php echo $title; ?></label>
             <input type="text" class="sdo-input" id="<?php echo $name; ?>" name="<?php echo $name; ?>"
@@ -140,7 +149,7 @@ if (!class_exists('SDO_Builder')) {
             $title = !empty($field['title']) ? $field['title'] : '';
             $desc = !empty($field['desc']) ? $field['desc'] : '';
             $name = !empty($field['id']) ? $field['id'] : '';
-            $value = empty($currentValue) ? $currentValue : $field['default'];
+            $value = !empty($currentValue) ? $currentValue : '';
             ?>
             <label class="sdo-form-label" for="<?php echo $name; ?>"><?php echo $title; ?></label>
             <textarea class="sdo-input" id="<?php echo $name; ?>" name="<?php echo $name; ?>">
@@ -154,7 +163,7 @@ if (!class_exists('SDO_Builder')) {
             $desc = !empty($field['desc']) ? $field['desc'] : '';
             $name = !empty($field['id']) ? $field['id'] : '';
             $options = !empty($field['options']) && is_array($field['options']) ? $field['options'] : array();
-            $value = empty($currentValue) ? $field['default'] : $currentValue;
+            $value = !empty($currentValue) ? $currentValue : '';
             echo '<label class="sdo-form-label">' . $title . '</label>';
             echo '<div class="sdo-button-set-box flex">';
             $index = 0;
@@ -162,6 +171,8 @@ if (!class_exists('SDO_Builder')) {
                 $index++;
                 $id = $name.$index;
                 if ($key != $value && $index == 1) {
+                    $active = true;
+                } elseif ($key == $value) {
                     $active = true;
                 } else {
                     $active = false;
@@ -177,12 +188,12 @@ if (!class_exists('SDO_Builder')) {
             $title = !empty($field['title']) ? $field['title'] : '';
             $desc = !empty($field['desc']) ? $field['desc'] : '';
             $name = !empty($field['id']) ? $field['id'] : '';
-            $value = filter_var(empty($currentValue) ? $field['default'] : $currentValue, FILTER_VALIDATE_BOOLEAN);
+            $value = ($currentValue === "on") ? true : filter_var($currentValue, FILTER_VALIDATE_BOOLEAN);
             echo '<label class="sdo-form-label">' . $title . '</label>';
             echo '<div class="sdo-switch-box flex">';
             $id = $name . '_switch';
-            $checked = ($value == 1) ? 'checked' : '';
-            echo '<input type="checkbox" class="sdo-switch-checkbox sdo-radio" id="' . $id . '" name="' . $name . '" value="1" ' . $checked . '>';
+            $checked = ($value) ? 'checked' : '';
+            echo '<input type="checkbox" class="sdo-switch-checkbox sdo-radio" id="' . $id . '" name="' . $name . '" ' . $checked . '>';
             echo '<label class="sdo-switch-label" for="' . $id . '"></label>';
             echo '</div>';
             echo '<p>' . $desc . '</p>';

@@ -54,6 +54,23 @@ if (!class_exists('SDO_Ajax_Handler')) {
             }
             return false;
         }
+        public static function defaults($dev_name) {
+            delete_option($dev_name);
+            $tabs = SDO::$tabs;
+            $defaults = [];
+            if (isset($tabs[$dev_name]) && is_array($tabs[$dev_name])) {
+                foreach ($tabs[$dev_name] as $tab) {
+                    if (isset($tab['id']) && isset($tab['fields']) && is_array($tab['fields'])) {
+                        foreach ($tab['fields'] as $field) {
+                            if (isset($field['id']) && isset($field['default'])) {
+                                $defaults[$field['id']] = $field['default'];
+                            }
+                        }
+                    }
+                }
+            }
+            self::save_data($dev_name, $defaults);
+        }
         private static function save_data($dev_name, $data_to_save) {
             $saved_data = get_option($dev_name, array());
             foreach ($data_to_save as $field_id => $sanitized_value) {
