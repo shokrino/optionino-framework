@@ -23,7 +23,6 @@ SDO::set_config('sdo_default',array(
     'admin_bar_priority' => null,
     'admin_bar_icon' => 'dashicons-menu',
 ));
-
 SDO::set_tab('sdo_default',array(
     'id' => 'tab_general',
     'title' => esc_html__('General Tab', 'sdo'),

@@ -37,7 +37,7 @@ if (!class_exists('SDO_Ajax_Handler')) {
                 wp_send_json_error(array('message' => 'Invalid data received!'));
             }
         }
-        private static function get_field_ids_for_dev_name($dev_name) {
+        public static function get_field_ids_for_dev_name($dev_name) {
             $tabs = SDO::$tabs;
             $fieldIds = [];
             if (isset($tabs[$dev_name]) && is_array($tabs[$dev_name])) {
