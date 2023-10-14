@@ -12,5 +12,5 @@ SDO_Builder::tab_buttons($settings['dev_name']);
 SDO_Builder::tab_end();
 SDO_Builder::form_start();
 SDO_Builder::form_fields($settings['dev_name']);
-SDO_Builder::form_end();
+SDO_Builder::form_end($settings['dev_name']);
 SDO_Builder::section_end();

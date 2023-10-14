@@ -30,8 +30,9 @@ if (!class_exists('SDO_Builder')) {
         public static function form_start() {
             echo '<form action="" method="POST" id="save-options-sdo" class="sdo-tab-content-outer">';
         }
-        public static function form_end() {
-            echo '<div class="sdo-options-save-box">
+        public static function form_end($dev_name) {
+            echo '<input type="hidden" name="dev_name" value="'.$dev_name.'">
+                   <div class="sdo-options-save-box">
                 <button type="submit" class="submit-sdo" name="save-sdo">'.__('save changes', 'sdo').'</button>
             </div>
             </form>';

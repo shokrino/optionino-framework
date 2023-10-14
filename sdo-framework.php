@@ -32,6 +32,7 @@ define('SDO_CURRENT_PHP',substr(phpversion(), 0, strpos(phpversion(), '.', strpo
 include_once SDO_INC.'functions.php';
 include_once SDO_CLSS.'secure.class.php';
 include_once SDO_CLSS.'builder.class.php';
+include_once SDO_CLSS.'ajax.class.php';
 include_once SDO_CLSS.'core.class.php';
 
 # customize framework
