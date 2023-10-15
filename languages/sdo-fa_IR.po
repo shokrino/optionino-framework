@@ -1,0 +1,135 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: ShokrinoDevOptions Framework\n"
+"POT-Creation-Date: 2023-10-15 15:33+0330\n"
+"PO-Revision-Date: 2023-10-15 15:39+0330\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: fa_IR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.2\n"
+"X-Poedit-Basepath: ..\n"
+"Plural-Forms: nplurals=2; plural=(n==0 || n==1);\n"
+"X-Poedit-Flags-xgettext: --add-comments=translators:\n"
+"X-Poedit-WPHeader: sdo-framework.php\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;"
+"_n_noop:1,2;_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.js\n"
+
+#: config.php:15 config.php:16
+msgid "Default Options"
+msgstr "تنظیمات پیشفرض"
+
+#: config.php:28 config.php:29
+msgid "General Tab"
+msgstr "بخش عمومی"
+
+#: config.php:48
+msgid "Test Text 1"
+msgstr ""
+
+#: config.php:49 config.php:57 config.php:65 config.php:87 config.php:104
+msgid "test subtitle"
+msgstr ""
+
+#: config.php:50 config.php:58 config.php:66 config.php:88 config.php:105
+msgid "test description"
+msgstr ""
+
+#: config.php:51 config.php:59 config.php:73 config.php:89 config.php:106
+msgid "Default Text"
+msgstr ""
+
+#: config.php:56
+msgid "Test Text 2"
+msgstr ""
+
+#: config.php:64
+msgid "Test Text 4"
+msgstr ""
+
+#: config.php:78
+msgid "Test switcher"
+msgstr ""
+
+#: config.php:79
+msgid "switcher subtitle"
+msgstr ""
+
+#: config.php:80
+msgid "switcher description"
+msgstr ""
+
+#: config.php:86
+msgid "Test Text 3"
+msgstr ""
+
+#: config.php:96 config.php:97
+msgid "General Tab 2"
+msgstr ""
+
+#: config.php:103
+msgid "Test Text"
+msgstr ""
+
+#: inc/classes/ajax.class.php:32
+msgid "Data saved successfully!"
+msgstr "تغییرات با موفقیت ذخیره شد!"
+
+#: inc/classes/ajax.class.php:34
+msgid "Invalid dev name!"
+msgstr "Invalid dev name!"
+
+#: inc/classes/ajax.class.php:37
+msgid "Invalid data received!"
+msgstr "اطلاعات وارد شده صحیح نیست!"
+
+#: inc/classes/builder.class.php:60
+msgid "save changes"
+msgstr "ذخیره تغییرات"
+
+#: inc/classes/builder.class.php:77
+msgid "Version: "
+msgstr "نسخه: "
+
+#: inc/classes/core.class.php:26
+msgid "<div class=\"error\"><p>Configuration with ID \""
+msgstr "<div class=\"error\"><p>تنظیمات با شناسه \""
+
+#: inc/classes/core.class.php:41
+msgid "<div class=\"error\"><p>Tab ID \""
+msgstr "<div class=\"error\"><p>شناسه بخش \""
+
+#: inc/classes/core.class.php:67
+msgid "Field ID \""
+msgstr "شناسه فیلد \""
+
+#: inc/classes/core.class.php:117
+msgid ""
+"Powered by <a href=\"http://shokrino.com/\" target=\"_blank"
+"\">ShokrinoDevOptions Framework</a>"
+msgstr ""
+"ساخته شده با <a href=\"http://shokrino.com/\" target=\"_blank\">فریمورک "
+"SDO</a>"
+
+#. Plugin Name of the plugin/theme
+msgid "ShokrinoDevOptions Framework"
+msgstr "فریمورک توسعه تنظیمات شکرینو"
+
+#. Plugin URI of the plugin/theme
+#. Author URI of the plugin/theme
+msgid "https://shokrino.com/"
+msgstr "https://shokrino.com/"
+
+#. Description of the plugin/theme
+msgid "Professional Tool to develop your WordPress theme and plugin easier"
+msgstr "ابزار حرفه ای برای توسعه راحت تر افزونه یا قالب وردپرسی"
+
+#. Author of the plugin/theme
+msgid "Shokrino Team"
+msgstr "تیم شکرینو"

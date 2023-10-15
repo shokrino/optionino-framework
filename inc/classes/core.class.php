@@ -18,6 +18,7 @@ if (!class_exists('SDO')) {
             add_action('wp_enqueue_scripts', [$this,'wp_scripts']);
             add_action('wp_head', [$this,'wp_head']);
             add_action('admin_menu', [$this,'create_menu']);
+            add_action( 'init', [$this,'sdo_load_textdomain'] );
         }
         public static function set_config($dev_name, $settings) {
             foreach (self::$settings as $existing_config) {
@@ -115,6 +116,9 @@ if (!class_exists('SDO')) {
         }
         public function admin_footer_text() {
             _e('Powered by <a href="http://shokrino.com/" target="_blank">ShokrinoDevOptions Framework</a>','sdo');
+        }
+        public function sdo_load_textdomain() {
+            load_plugin_textdomain( SDO_TEXTDOMAIN, false,basename( SDO_PATH ) . '/languages/' );
         }
         public function setup() {
 
