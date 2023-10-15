@@ -29,12 +29,12 @@ if (!class_exists('SDO_Ajax_Handler')) {
                         }
                     }
                     self::save_data($dev_name, $data_to_save);
-                    wp_send_json_success(array('message' => 'Data saved successfully!'));
+                    wp_send_json_success(array('message' => __('Data saved successfully!'),'sdo'));
                 } else {
-                    wp_send_json_error(array('message' => 'Invalid dev name!'));
+                    wp_send_json_error(array('message' => __('Invalid dev name!','sdo')));
                 }
             } else {
-                wp_send_json_error(array('message' => 'Invalid data received!'));
+                wp_send_json_error(array('message' => __('Invalid data received!','sdo')));
             }
         }
         public static function get_field_ids_for_dev_name($dev_name) {

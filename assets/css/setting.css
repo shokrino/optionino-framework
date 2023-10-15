@@ -164,6 +164,9 @@
     border-radius: 7px !important;
     font-family: var(--sdo-main-font) !important;
 }
+.sdo-section input[type="date"]:focus, .sdo-section input[type="datetime-local"]:focus, .sdo-section input[type="datetime"]:focus, .sdo-section input[type="email"]:focus, .sdo-section input[type="month"]:focus, .sdo-section input[type="number"]:focus, .sdo-section input[type="password"]:focus, .sdo-section input[type="search"]:focus, .sdo-section input[type="tel"]:focus, .sdo-section input[type="text"]:focus, .sdo-section input[type="time"]:focus, .sdo-section input[type="url"]:focus, .sdo-section input[type="week"]:focus {
+    border-color: var(--sdo-main-color);
+}
 .sdo-box-option > p {
     margin-top: 0 !important;
 }
@@ -226,4 +229,46 @@
 }
 .sdo-switch-checkbox:checked + .sdo-switch-label:after {
     transform: translateX(25px);
+}
+#sdo.loading .loading-spinner-sdo {
+    display: flex;
+}
+.loading-spinner-sdo {
+    position: fixed;
+    width: 100%;
+    display: none;
+    justify-content: center;
+    height: 100%;
+    z-index: 99999999;
+    background: #25273275;
+    top: 0;
+    right: 0;
+    flex-direction: column;
+    align-items: center;
+    backdrop-filter: blur(3px);
+}
+.loading-spinner-sdo > svg {
+    max-width: 135px;
+    color: #fff;
+}
+.error-text {
+    color: #b52230;
+    padding: 8px 10px;
+    text-align: center;
+    background: #f8d7da;
+    font-weight: 600;
+    display: none;
+    font-size: 15px;
+    border-radius: 8px;
+}
+.success-text {
+    color: #427e1b;
+    padding: 8px 10px;
+    text-align: center;
+    background: #dff8d7;
+    border: 1px solid #d1f5c6;
+    font-weight: 600;
+    display: none;
+    font-size: 15px;
+    border-radius: 8px;
 }

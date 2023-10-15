@@ -17,4 +17,5 @@ SDO_Builder::form_start();
 SDO_Builder::form_fields($settings['dev_name']);
 SDO_Builder::form_end($settings['dev_name']);
 SDO_Builder::section_end();
+SDO_Builder::loading();
 SDO_Builder::container_end();
