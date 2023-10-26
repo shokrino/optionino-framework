@@ -136,23 +136,33 @@ if (!class_exists('SDO_Builder')) {
                 }
             }
         }
-        public static function field_option($dev_name,$field) {
+        public static function field_option($dev_name, $field) {
             ?>
-            <div class="sdo-box-option">
+            <div class="sdo-box-option<?php if (!empty($field['require'][0])){ echo " sdo-conditional-option"; } ?>" data-require="<?php echo $field['require'][0]; ?>"
+                 data-require-operator="<?php echo $field['require'][1]; ?>"
+                 data-require-value="<?php echo $field['require'][2]; ?>">
                 <?php
                 $type = $field['type'];
                 $currentValue = sdo_option($dev_name, $field['id']);
                 if (method_exists(__CLASS__, $type)) {
-                    self::$type($field, $currentValue);
-                } ?>
+                    self::$type($dev_name, $field, $currentValue);
+                }
+                ?>
             </div>
             <?php
         }
-        public static function text($field,$currentValue) {
+        public static function text($dev_name, $field,$currentValue) {
             $title = !empty($field['title']) ? $field['title'] : '';
             $desc = !empty($field['desc']) ? $field['desc'] : '';
             $name = !empty($field['id']) ? $field['id'] : '';
             $value = !empty($currentValue) ? $currentValue : '';
+            if (isset($field['require']) && is_array($field['require']) && count($field['require']) == 3) {
+                list($requiredField, $operator, $requiredValue) = $field['require'];
+                $requiredFieldValue = sdo_option($dev_name, $requiredField);
+                if (!self::checkCondition($requiredFieldValue, $operator, $requiredValue)) {
+                    return;
+                }
+            }
             ?>
             <label class="sdo-form-label" for="<?php echo $name; ?>"><?php echo $title; ?></label>
             <input type="text" class="sdo-input" id="<?php echo $name; ?>" name="<?php echo $name; ?>"
@@ -160,11 +170,18 @@ if (!class_exists('SDO_Builder')) {
             <p><?php echo $desc; ?></p>
             <?php
         }
-        public static function textarea($field,$currentValue) {
+        public static function textarea($dev_name, $field,$currentValue) {
             $title = !empty($field['title']) ? $field['title'] : '';
             $desc = !empty($field['desc']) ? $field['desc'] : '';
             $name = !empty($field['id']) ? $field['id'] : '';
             $value = !empty($currentValue) ? $currentValue : '';
+            if (isset($field['require']) && is_array($field['require']) && count($field['require']) == 3) {
+                list($requiredField, $operator, $requiredValue) = $field['require'];
+                $requiredFieldValue = sdo_option($dev_name, $requiredField);
+                if (!self::checkCondition($requiredFieldValue, $operator, $requiredValue)) {
+                    return;
+                }
+            }
             ?>
             <label class="sdo-form-label" for="<?php echo $name; ?>"><?php echo $title; ?></label>
             <textarea class="sdo-input" id="<?php echo $name; ?>" name="<?php echo $name; ?>">
@@ -173,12 +190,19 @@ if (!class_exists('SDO_Builder')) {
             <p><?php echo $desc; ?></p>
             <?php
         }
-        public static function buttonset($field, $currentValue) {
+        public static function buttonset($dev_name, $field, $currentValue) {
             $title = !empty($field['title']) ? $field['title'] : '';
             $desc = !empty($field['desc']) ? $field['desc'] : '';
             $name = !empty($field['id']) ? $field['id'] : '';
             $options = !empty($field['options']) && is_array($field['options']) ? $field['options'] : array();
             $value = !empty($currentValue) ? $currentValue : '';
+            if (isset($field['require']) && is_array($field['require']) && count($field['require']) == 3) {
+                list($requiredField, $operator, $requiredValue) = $field['require'];
+                $requiredFieldValue = sdo_option($dev_name, $requiredField);
+                if (!self::checkCondition($requiredFieldValue, $operator, $requiredValue)) {
+                    return;
+                }
+            }
             echo '<label class="sdo-form-label">' . $title . '</label>';
             echo '<div class="sdo-button-set-box flex">';
             $index = 0;
@@ -199,11 +223,19 @@ if (!class_exists('SDO_Builder')) {
             echo '</div>';
             echo '<p>' . $desc . '</p>';
         }
-        public static function switcher($field, $currentValue) {
+        public static function switcher($dev_name, $field, $currentValue) {
             $title = !empty($field['title']) ? $field['title'] : '';
             $desc = !empty($field['desc']) ? $field['desc'] : '';
             $name = !empty($field['id']) ? $field['id'] : '';
             $value = ($currentValue === "on") ? true : filter_var($currentValue, FILTER_VALIDATE_BOOLEAN);
+            if (isset($field['require']) && is_array($field['require']) && count($field['require']) == 3) {
+                list($requiredField, $operator, $requiredValue) = $field['require'];
+                $requiredFieldValue = sdo_option($dev_name, $requiredField);
+                if (!self::checkCondition($requiredFieldValue, $operator, $requiredValue)) {
+                    return;
+                }
+            }
+
             echo '<label class="sdo-form-label">' . $title . '</label>';
             echo '<div class="sdo-switch-box flex">';
             $id = $name . '_switch';
@@ -212,6 +244,20 @@ if (!class_exists('SDO_Builder')) {
             echo '<label class="sdo-switch-label" for="' . $id . '"></label>';
             echo '</div>';
             echo '<p>' . $desc . '</p>';
+        }
+        public static function checkCondition($value, $operator, $requiredValue) {
+            switch ($operator) {
+                case '=':
+                    return $value == $requiredValue;
+                case '!=':
+                    return $value != $requiredValue;
+                case '>':
+                    return $value > $requiredValue;
+                case '<':
+                    return $value < $requiredValue;
+                default:
+                    return false;
+            }
         }
     }
 }

@@ -50,7 +50,33 @@ document.addEventListener("DOMContentLoaded", function() {
         };
         xhr.send(formData);
     });
-
+    let fieldsWithRequire = document.querySelectorAll('.sdo-box-option');
+    fieldsWithRequire.forEach(function(field) {
+        let requiredFieldId = field.getAttribute('data-require');
+        let requiredOperator = field.getAttribute('data-require-operator');
+        let requiredValue = field.getAttribute('data-require-value');
+        let requiredField = document.getElementById(requiredFieldId);
+        function checkCondition(value, operator, requiredValue) {
+            switch (operator) {
+                case '=':
+                    return value == requiredValue;
+                case '!=':
+                    return value != requiredValue;
+                case '>':
+                    return value > requiredValue;
+                case '<':
+                    return value < requiredValue;
+                default:
+                    return false;
+            }
+        }
+        if (requiredField) {
+            field.style.display = checkCondition(requiredField.value, requiredOperator, requiredValue) ? 'block' : 'none';
+            requiredField.addEventListener('input', function() {
+                field.style.display = checkCondition(requiredField.value, requiredOperator, requiredValue) ? 'block' : 'none';
+            });
+        }
+    });
 });
 function openTabSDO(evt, tabName) {
     let i, tabcontent, tablinks;
