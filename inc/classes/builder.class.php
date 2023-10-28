@@ -238,7 +238,7 @@ if (!class_exists('SDO_Builder')) {
 
             echo '<label class="sdo-form-label">' . $title . '</label>';
             echo '<div class="sdo-switch-box flex">';
-            $id = $name . '_switch';
+            $id = $name;
             $checked = ($value == "on") ? 'checked' : '';
             echo '<input type="checkbox" class="sdo-switch-checkbox sdo-radio" id="' . $id . '" name="' . $name . '" ' . $checked . '>';
             echo '<label class="sdo-switch-label" for="' . $id . '"></label>';

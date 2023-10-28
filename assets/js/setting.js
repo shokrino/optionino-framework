@@ -50,33 +50,6 @@ document.addEventListener("DOMContentLoaded", function() {
         };
         xhr.send(formData);
     });
-    let fieldsWithRequire = document.querySelectorAll('.sdo-box-option');
-    fieldsWithRequire.forEach(function(field) {
-        let requiredFieldId = field.getAttribute('data-require');
-        let requiredOperator = field.getAttribute('data-require-operator');
-        let requiredValue = field.getAttribute('data-require-value');
-        let requiredField = document.getElementById(requiredFieldId);
-        function checkCondition(value, operator, requiredValue) {
-            switch (operator) {
-                case '=':
-                    return value == requiredValue;
-                case '!=':
-                    return value != requiredValue;
-                case '>':
-                    return value > requiredValue;
-                case '<':
-                    return value < requiredValue;
-                default:
-                    return false;
-            }
-        }
-        if (requiredField) {
-            field.style.display = checkCondition(requiredField.value, requiredOperator, requiredValue) ? 'block' : 'none';
-            requiredField.addEventListener('input', function() {
-                field.style.display = checkCondition(requiredField.value, requiredOperator, requiredValue) ? 'block' : 'none';
-            });
-        }
-    });
 });
 function openTabSDO(evt, tabName) {
     let i, tabcontent, tablinks;
@@ -91,3 +64,53 @@ function openTabSDO(evt, tabName) {
     document.getElementById(tabName).style.display = "block";
     evt.currentTarget.className += " active";
 }
+document.addEventListener("DOMContentLoaded", function() {
+    let fieldsWithRequire = Array.from(document.querySelectorAll('[data-require]'));
+
+    function checkCondition(value, operator, requiredValue) {
+        switch (operator) {
+            case '=':
+                return value == requiredValue;
+            case '!=':
+                return value != requiredValue;
+            default:
+                return false;
+        }
+    }
+
+    function updateFieldVisibility(field) {
+        let requiredFieldId = field.getAttribute('data-require');
+        let requiredOperator = field.getAttribute('data-require-operator');
+        let requiredValue = field.getAttribute('data-require-value');
+        let requiredField = document.getElementById(requiredFieldId);
+
+        if (requiredField && requiredField.type === 'checkbox') {
+            if (checkCondition(requiredField.checked, requiredOperator, requiredValue)) {
+                field.style.display = 'flex';
+            } else {
+                field.style.display = 'none';
+            }
+        }
+    }
+
+    function initializeFieldVisibility() {
+        fieldsWithRequire.forEach(function(field) {
+            updateFieldVisibility(field);
+        });
+    }
+
+    let requiredCheckboxes = Array.from(document.querySelectorAll('[data-require]'));
+    requiredCheckboxes.forEach(function(checkbox) {
+        checkbox.addEventListener('change', function() {
+            fieldsWithRequire.forEach(function(field) {
+                updateFieldVisibility(field);
+            });
+        });
+    });
+
+    // Initial visibility check
+    initializeFieldVisibility();
+
+    // Rest of your code...
+});
+

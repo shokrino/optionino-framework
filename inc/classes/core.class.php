@@ -45,7 +45,7 @@ if (!class_exists('SDO')) {
                 }
             }
             self::$tabs[$dev_name][$tab_settings['id']] = $tab_settings;
-            $fields[$tab['id']] = $tab_settings['fields'];
+            $fields[$tab_settings['id']] = $tab_settings['fields'];
             self::set_fields($dev_name, $fields);
         }
         public static function set_fields($dev_name, $tabfields) {
