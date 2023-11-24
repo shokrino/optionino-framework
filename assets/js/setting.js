@@ -64,53 +64,75 @@ function openTabSDO(evt, tabName) {
     document.getElementById(tabName).style.display = "block";
     evt.currentTarget.className += " active";
 }
-document.addEventListener("DOMContentLoaded", function() {
-    let fieldsWithRequire = Array.from(document.querySelectorAll('[data-require]'));
+document.addEventListener("DOMContentLoaded", function () {
+    const fields = Array.from(document.querySelectorAll('.sdo-box-option'));
+    const fieldsWithRequire = Array.from(document.querySelectorAll('[data-require-0]'));
 
-    function checkCondition(value, operator, requiredValue) {
+    function checkConditions(field,operator,requiredValue) {
+        let requiredField = document.getElementById(field);
+
+        if (!requiredField) {
+            return false;
+        }
+
+        let value;
+        if (requiredField.tagName === 'SELECT') {
+            value = requiredField.value;
+        } else if (requiredField.type === 'checkbox') {
+            value = requiredField.checked;
+        } else {
+            value = requiredField.value;
+        }
+
         switch (operator) {
             case '=':
                 return value == requiredValue;
             case '!=':
                 return value != requiredValue;
+            case 'or':
+                if (Array.isArray(requiredValue)) {
+                    let returnVal = false;
+                    requiredValue.forEach(subVal => {
+                        if (value == subVal) {
+                            returnVal = true;
+                        }
+                    });
+                    return returnVal;
+                }
             default:
                 return false;
         }
     }
 
     function updateFieldVisibility(field) {
-        let requiredFieldId = field.getAttribute('data-require');
-        let requiredOperator = field.getAttribute('data-require-operator');
-        let requiredValue = field.getAttribute('data-require-value');
-        let requiredField = document.getElementById(requiredFieldId);
-
-        if (requiredField && requiredField.type === 'checkbox') {
-            if (checkCondition(requiredField.checked, requiredOperator, requiredValue)) {
-                field.style.display = 'flex';
-            } else {
-                field.style.display = 'none';
+        const requiredFieldConditions = Array.from(field.attributes)
+            .filter(attr => attr.name.startsWith('data-require-'))
+            .map(attr => JSON.parse(attr.value || 'null'))
+            .filter(Boolean);
+        field.setAttribute('display', "true");
+        requiredFieldConditions.forEach(condition => {
+            if (!checkConditions(condition[0],condition[1],condition[2])) {
+                field.setAttribute('display', "false");
             }
-        }
-    }
-
-    function initializeFieldVisibility() {
-        fieldsWithRequire.forEach(function(field) {
-            updateFieldVisibility(field);
         });
     }
 
-    let requiredCheckboxes = Array.from(document.querySelectorAll('[data-require]'));
-    requiredCheckboxes.forEach(function(checkbox) {
-        checkbox.addEventListener('change', function() {
-            fieldsWithRequire.forEach(function(field) {
-                updateFieldVisibility(field);
-            });
+    function updateConditionalOptionsDisplay() {
+        const conditionalOptions = Array.from(document.querySelectorAll('.sdo-conditional-option'));
+        conditionalOptions.forEach(option => {
+            const attributeValue = option.getAttribute('display');
+            if (attributeValue === 'true') {
+                option.style.display = 'flex';
+            } else {
+                option.style.display = 'none';
+            }
+        });
+    }
+
+    fields.forEach((input) => {
+        input.addEventListener('change', () => {
+            fieldsWithRequire.forEach(updateFieldVisibility);
+            updateConditionalOptionsDisplay();
         });
     });
-
-    // Initial visibility check
-    initializeFieldVisibility();
-
-    // Rest of your code...
 });
-

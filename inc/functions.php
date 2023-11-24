@@ -13,7 +13,7 @@ function sdo_option($dev_name, $field) {
     }
     return NULL;
 }
-function is_id_duplicate($array, $id) {
+function is_id_duplicate_sdo($array, $id) {
     $id_counts = array_count_values($array);
     return isset($id_counts[$id]) && $id_counts[$id] > 1;
 }

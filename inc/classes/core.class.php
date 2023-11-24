@@ -63,7 +63,7 @@ if (!class_exists('SDO')) {
             foreach ($tabfields as $tab => $fields) {
                 $tabFieldIds = array_column($fields, 'id');
                 foreach ($tabFieldIds as $fieldId) {
-                    if (in_array($fieldId, $existingFieldIds) || is_id_duplicate($tabFieldIds, $fieldId)) {
+                    if (in_array($fieldId, $existingFieldIds) || is_id_duplicate_sdo($tabFieldIds, $fieldId)) {
                         add_action('admin_notices', function() use ($fieldId, $tab) {
                             echo '<div class="error"><p>' . esc_html__('Field ID "' . $fieldId . '" is already in use. Please use a unique ID.', 'sdo') . '</p></div>';
                         });
