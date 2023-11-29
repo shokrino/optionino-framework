@@ -155,12 +155,6 @@ if (!class_exists('SDO_Builder')) {
             </div>
             <?php
         }
-
-
-
-
-
-
         public static function text($dev_name, $field,$currentValue) {
             $title = !empty($field['title']) ? $field['title'] : '';
             $desc = !empty($field['desc']) ? $field['desc'] : '';
@@ -211,12 +205,64 @@ if (!class_exists('SDO_Builder')) {
             <p><?php echo $desc; ?></p>
             <?php
         }
+        public static function tinymce($dev_name, $field, $currentValue) {
+            $title = !empty($field['title']) ? $field['title'] : '';
+            $desc = !empty($field['desc']) ? $field['desc'] : '';
+            $name = !empty($field['id']) ? $field['id'] : '';
+            $value = !empty($currentValue) ? $currentValue : '';
+
+            if (isset($field['require']) && is_array($field['require'])) {
+                $showField = true;
+
+                foreach ($field['require'] as $condition) {
+                    list($requiredField, $operator, $requiredValue) = $condition;
+                    $requiredFieldValue = sdo_option($dev_name, $requiredField);
+
+                    if (!self::checkCondition($requiredFieldValue, $operator, $requiredValue)) {
+                        $showField = false;
+                        break;
+                    }
+                }
+
+                if (!$showField) {
+                    return;
+                }
+            }
+
+            ?>
+            <label class="sdo-form-label" for="<?php echo $name; ?>"><?php echo $title; ?></label>
+            <textarea id="<?php echo $name; ?>" name="<?php echo $name; ?>" class="sdo-input"><?php echo $value; ?></textarea>
+            <p><?php echo $desc; ?></p>
+            <?php wp_enqueue_editor(); ?>
+            <script>
+                jQuery(document).ready(function($){
+                    wp.editor.initialize('<?php echo $name; ?>', {
+                        tinymce: {
+                            wpautop: true,
+                            toolbar: 'formatselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link unlink | charmap | pastetext | removeformat | undo redo | wp_adv',
+                            wpautop: true,
+                            wrap_lines: true,
+                            tabfocus_elements: ':prev,:next',
+                            toolbar1: 'styleselect formatselect fontselect fontsizeselect',
+                            toolbar2: 'cut copy paste | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link unlink | charmap | pastetext | removeformat | undo redo | wp_adv',
+                            toolbar3: 'table | hr | wp_more | wp_page | wp_pagebreak | visualchars | visualblocks | code',
+                            toolbar4: 'fullscreen | wp_adv | wp_fullscreen',
+                        },
+                        quicktags: {
+                            buttons: "b,i,ul,ol,li,link,close"
+                        }
+                    });
+                });
+            </script>
+            <?php
+        }
         public static function buttonset($dev_name, $field, $currentValue) {
             $title = !empty($field['title']) ? $field['title'] : '';
             $desc = !empty($field['desc']) ? $field['desc'] : '';
             $name = !empty($field['id']) ? $field['id'] : '';
             $options = !empty($field['options']) && is_array($field['options']) ? $field['options'] : array();
             $value = !empty($currentValue) ? $currentValue : '';
+
             if (isset($field['require']) && is_array($field['require'])) {
                 $showField = true;
 
@@ -237,24 +283,18 @@ if (!class_exists('SDO_Builder')) {
 
             echo '<label class="sdo-form-label">' . $title . '</label>';
             echo '<div class="sdo-button-set-box flex">';
-            $index = 0;
+
             foreach ($options as $key => $label) {
-                $index++;
-                $id = $name.$index;
-                if ($key != $value && $index == 1) {
-                    $active = true;
-                } elseif ($key == $value) {
-                    $active = true;
-                } else {
-                    $active = false;
-                }
-                $checked = ($active) ? 'checked' : '';
+                $id = $name . '_' . $key;
+                $checked = ($key == $value) ? 'checked' : '';
                 echo '<input type="radio" class="sdo-radio button-set" id="' . $id . '" name="' . $name . '" value="' . esc_attr($key) . '" ' . $checked . '>';
                 echo '<label class="sdo-button-label flex" for="'.$id.'">' . esc_html($label) . '</label>';
             }
+
             echo '</div>';
             echo '<p>' . $desc . '</p>';
         }
+
         public static function switcher($dev_name, $field, $currentValue) {
             $title = !empty($field['title']) ? $field['title'] : '';
             $desc = !empty($field['desc']) ? $field['desc'] : '';
@@ -322,6 +362,41 @@ if (!class_exists('SDO_Builder')) {
             }
 
             echo '</select>';
+            echo '<p>' . $desc . '</p>';
+        }
+        public static function repeater($dev_name, $field, $currentValue)
+        {
+            $title = !empty($field['title']) ? $field['title'] : '';
+            $desc = !empty($field['desc']) ? $field['desc'] : '';
+            $name = !empty($field['id']) ? $field['id'] : '';
+            $fields = !empty($field['fields']) && is_array($field['fields']) ? $field['fields'] : array();
+
+            // Display the repeater field UI
+            echo '<div class="repeater-field" data-repeater-name="' . $name . '">';
+            echo '<label class="sdo-form-label">' . $title . '</label>';
+            echo '<div class="repeater-container">';
+            echo '<button class="add-repeater-item">Add Item</button>';
+
+            // Check if $currentValue is empty and create a default empty item
+            if (empty($currentValue)) {
+                $currentValue = [array_fill_keys(array_column($fields, 'id'), '')];
+            }
+
+            // Loop through the repeater items and display the fields
+            foreach ($currentValue as $index => $item) {
+                echo '<div class="repeater-item" data-item-index="' . $index . '">';
+
+                foreach ($fields as $subfield) {
+                    // Use the field_option method for subfields
+                    self::field_option($dev_name, $subfield);
+                }
+
+                echo '<button class="remove-repeater-item">Remove</button>';
+                echo '</div>';
+            }
+
+            echo '</div>';
+            echo '</div>';
             echo '<p>' . $desc . '</p>';
         }
 

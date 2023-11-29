@@ -12,7 +12,6 @@ if (!class_exists('SDO_Ajax_Handler')) {
             add_action('wp_ajax_save_sdo_data', [$this, 'save_sdo_data']);
             add_action('wp_ajax_nopriv_save_sdo_data', [$this, 'save_sdo_data']);
         }
-
         public static function save_sdo_data() {
             check_ajax_referer('sdo_nonce', 'security');
             $dev_name = sanitize_text_field($_POST['dev_name']);

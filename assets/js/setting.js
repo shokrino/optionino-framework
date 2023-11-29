@@ -129,10 +129,59 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    fields.forEach((input) => {
-        input.addEventListener('change', () => {
-            fieldsWithRequire.forEach(updateFieldVisibility);
-            updateConditionalOptionsDisplay();
-        });
+    function updateOnLoadAndChange() {
+        fieldsWithRequire.forEach(updateFieldVisibility);
+        updateConditionalOptionsDisplay();
+    }
+
+    updateOnLoadAndChange();
+
+    fields.forEach(input => input.addEventListener('change', updateOnLoadAndChange));
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Add Item Button Click Event
+    document.addEventListener('click', function (event) {
+        if (event.target.classList.contains('add-repeater-item')) {
+            event.preventDefault();
+            var repeaterContainer = event.target.closest('.repeater-field').querySelector('.repeater-container');
+
+            // Find the first .repeater-item within the container
+            var template = repeaterContainer.querySelector('.repeater-item');
+
+            // Check if the template exists before cloning
+            if (template) {
+                var newItem = template.cloneNode(true);
+
+                // Reset the values of input fields
+                newItem.querySelectorAll('input, textarea, select').forEach(function (input) {
+                    input.value = '';
+                });
+
+                repeaterContainer.appendChild(newItem);
+            } else {
+                // If the template doesn't exist, create it and append it to the container
+                var newItem = document.createElement('div');
+                newItem.classList.add('repeater-item');
+
+                // Add your input fields or other elements here
+                newItem.innerHTML = '<input type="text" name="new-field" value="">';
+
+                repeaterContainer.appendChild(newItem);
+            }
+        }
+    });
+
+    // Remove Item Button Click Event
+    document.addEventListener('click', function (event) {
+        if (event.target.classList.contains('remove-repeater-item')) {
+            event.preventDefault();
+            var repeaterItems = event.target.closest('.repeater-field').querySelectorAll('.repeater-item');
+
+            // Check if there is more than one repeater-item before removing
+            if (repeaterItems.length > 1) {
+                event.target.closest('.repeater-item').remove();
+            }
+        }
     });
 });
