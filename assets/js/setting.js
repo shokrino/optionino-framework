@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function() {
     let form = document.getElementById('save-options-sdo');
     let errorText = form.querySelector('.error-text');
     let successText = form.querySelector('.success-text');
-    form.addEventListener('submit', function(event) {
+    form.addEventListener('submit', function (event) {
         event.preventDefault();
         SDO.classList.add('loading');
         errorText.style.display = 'none';
@@ -25,12 +25,19 @@ document.addEventListener("DOMContentLoaded", function() {
                 formData.set(checkboxName, 'off');
             }
         });
+        let repeaterFields = document.querySelectorAll('.sdo-repeater-field[data-repeater-name]');
+        repeaterFields.forEach(repeaterField => {
+            let repeaterName = repeaterField.getAttribute('data-repeater-name');
+            let repeaterValues = collectRepeaterValues(repeaterField);
+            formData.append(repeaterName, repeaterValues);
+            console.log(repeaterValues);
+        });
         formData.append('action', 'save_sdo_data');
         formData.append('security', data_sdo.nonce);
         let xhr = new XMLHttpRequest();
         xhr.open('POST', data_sdo.ajax_url, true);
         xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-        xhr.onload = function() {
+        xhr.onload = function () {
             let response = JSON.parse(xhr.responseText);
             if (xhr.status === 200) {
                 SDO.classList.remove('loading');
@@ -45,11 +52,36 @@ document.addEventListener("DOMContentLoaded", function() {
                 console.error('Request failed with status:', xhr.status);
             }
         };
-        xhr.onerror = function() {
+        xhr.onerror = function () {
             console.error('Request failed');
         };
         xhr.send(formData);
     });
+    function collectRepeaterValues(repeaterField) {
+        let repeaterItems = repeaterField.querySelectorAll('.sdo-repeater-item');
+        let mainArray = [];
+        repeaterItems.forEach((repeaterItem, index) => {
+            let subArray = {};
+            repeaterItem.querySelectorAll('input, textarea, select').forEach(input => {
+                subArray[input.name] = input.value;
+            });
+            mainArray.push(encodeRepeaterValues(subArray));
+        });
+        return encodeRepeaterValues(mainArray);
+    }
+    function encodeRepeaterValues(values) {
+        let params = new URLSearchParams();
+        for (const key in values) {
+            if (values.hasOwnProperty(key)) {
+                if (Array.isArray(values[key])) {
+                    params.append(key, JSON.stringify(values[key]));
+                } else {
+                    params.append(key, values[key]);
+                }
+            }
+        }
+        return params.toString();
+    }
 });
 function openTabSDO(evt, tabName) {
     let i, tabcontent, tablinks;
@@ -137,50 +169,40 @@ document.addEventListener("DOMContentLoaded", function () {
     updateOnLoadAndChange();
 
     fields.forEach(input => input.addEventListener('change', updateOnLoadAndChange));
-});
 
-document.addEventListener('DOMContentLoaded', function () {
-    // Add Item Button Click Event
     document.addEventListener('click', function (event) {
-        if (event.target.classList.contains('add-repeater-item')) {
+        if (event.target.classList.contains('sdo-add-repeater-item')) {
             event.preventDefault();
-            var repeaterContainer = event.target.closest('.repeater-field').querySelector('.repeater-container');
-
-            // Find the first .repeater-item within the container
-            var template = repeaterContainer.querySelector('.repeater-item');
-
-            // Check if the template exists before cloning
+            let repeaterContainer = event.target.closest('.sdo-repeater-field').querySelector('.sdo-repeater-container');
+            let template = repeaterContainer.querySelector('.sdo-repeater-item');
             if (template) {
-                var newItem = template.cloneNode(true);
-
-                // Reset the values of input fields
+                let index = repeaterContainer.querySelectorAll('.sdo-repeater-item').length;
+                let newItem = template.cloneNode(true);
                 newItem.querySelectorAll('input, textarea, select').forEach(function (input) {
+                    let idParts = input.id.split('_');
+                    idParts.pop();
+                    idParts.push(index);
+                    input.id = idParts.join('_');
+                    let nameParts = input.name.split('_');
+                    nameParts.pop();
+                    nameParts.push(index);
+                    input.name = nameParts.join('_');
                     input.value = '';
                 });
-
                 repeaterContainer.appendChild(newItem);
             } else {
-                // If the template doesn't exist, create it and append it to the container
-                var newItem = document.createElement('div');
-                newItem.classList.add('repeater-item');
-
-                // Add your input fields or other elements here
+                let newItem = document.createElement('div');
+                newItem.classList.add('sdo-repeater-item');
                 newItem.innerHTML = '<input type="text" name="new-field" value="">';
-
                 repeaterContainer.appendChild(newItem);
             }
         }
-    });
-
-    // Remove Item Button Click Event
-    document.addEventListener('click', function (event) {
-        if (event.target.classList.contains('remove-repeater-item')) {
+        if (event.target.classList.contains('sdo-remove-repeater-item')) {
             event.preventDefault();
-            var repeaterItems = event.target.closest('.repeater-field').querySelectorAll('.repeater-item');
-
-            // Check if there is more than one repeater-item before removing
+            let repeaterContainer = event.target.closest('.sdo-repeater-field').querySelector('.sdo-repeater-container');
+            let repeaterItems = repeaterContainer.querySelectorAll('.sdo-repeater-item');
             if (repeaterItems.length > 1) {
-                event.target.closest('.repeater-item').remove();
+                event.target.closest('.sdo-repeater-item').remove();
             }
         }
     });

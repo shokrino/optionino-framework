@@ -136,10 +136,10 @@ if (!class_exists('SDO_Builder')) {
                 }
             }
         }
-        public static function field_option($dev_name, $field) {
+        public static function field_option($dev_name, $field, $repeater = false, $index = 0 ,$currentValue = "") {
             ?>
-            <div id="container-<?php echo $field['id']; ?>" class="sdo-box-option sdo-conditional-option"
-                 display="true"
+            <div id="container-<?php echo $field['id']."-".$index; ?>" class="sdo-box-option sdo-conditional-option"
+                 display="true" <?php if ($repeater) { echo ' repeater-name="'.$field["id"].'"'; } ?>
                 <?php if (is_array($field['require'])) { ?>
                     <?php foreach ($field['require'] as $index => $require) { ?>
                         data-require-<?php echo $index; ?>='<?php echo json_encode($require, JSON_UNESCAPED_UNICODE); ?>'
@@ -147,26 +147,20 @@ if (!class_exists('SDO_Builder')) {
                 <?php } ?>>
                 <?php
                 $type = $field['type'];
-                $currentValue = sdo_option($dev_name, $field['id']);
+                $currentValue = !empty($currentValue) && $repeater ? $currentValue : sdo_option($dev_name, $field['id']);
                 if (method_exists(__CLASS__, $type)) {
-                    self::$type($dev_name, $field, $currentValue);
+                    $index_repeater = $repeater ? "_".$index : "";
+                    self::$type($dev_name, $field, $currentValue, $index_repeater);
                 }
                 ?>
             </div>
             <?php
         }
-        public static function text($dev_name, $field,$currentValue) {
+        public static function text($dev_name, $field,$currentValue,$index = "") {
             $title = !empty($field['title']) ? $field['title'] : '';
             $desc = !empty($field['desc']) ? $field['desc'] : '';
-            $name = !empty($field['id']) ? $field['id'] : '';
+            $name = !empty($field['id']) ? $field['id'].$index : '';
             $value = !empty($currentValue) ? $currentValue : '';
-            if (isset($field['require']) && is_array($field['require']) && count($field['require']) == 3 && !empty($value)) {
-                list($requiredField, $operator, $requiredValue) = $field['require'];
-                $requiredFieldValue = $value;
-                if (!self::checkCondition($requiredFieldValue, $operator, $requiredValue)) {
-                    return;
-                }
-            }
             ?>
             <label class="sdo-form-label" for="<?php echo $name; ?>"><?php echo $title; ?></label>
             <input type="text" class="sdo-input" id="<?php echo $name; ?>" name="<?php echo $name; ?>"
@@ -174,29 +168,11 @@ if (!class_exists('SDO_Builder')) {
             <p><?php echo $desc; ?></p>
             <?php
         }
-        public static function textarea($dev_name, $field,$currentValue) {
+        public static function textarea($dev_name, $field,$currentValue,$index = "") {
             $title = !empty($field['title']) ? $field['title'] : '';
             $desc = !empty($field['desc']) ? $field['desc'] : '';
-            $name = !empty($field['id']) ? $field['id'] : '';
+            $name = !empty($field['id']) ? $field['id'].$index : '';
             $value = !empty($currentValue) ? $currentValue : '';
-            if (isset($field['require']) && is_array($field['require'])) {
-                $showField = true;
-
-                foreach ($field['require'] as $condition) {
-                    list($requiredField, $operator, $requiredValue) = $condition;
-                    $requiredFieldValue = sdo_option($dev_name, $requiredField);
-
-                    if (!self::checkCondition($requiredFieldValue, $operator, $requiredValue)) {
-                        $showField = false;
-                        break;
-                    }
-                }
-
-                if (!$showField) {
-                    return;
-                }
-            }
-
             ?>
             <label class="sdo-form-label" for="<?php echo $name; ?>"><?php echo $title; ?></label>
             <textarea class="sdo-input" id="<?php echo $name; ?>" name="<?php echo $name; ?>">
@@ -205,30 +181,11 @@ if (!class_exists('SDO_Builder')) {
             <p><?php echo $desc; ?></p>
             <?php
         }
-        public static function tinymce($dev_name, $field, $currentValue) {
+        public static function tinymce($dev_name, $field,$currentValue,$index = "") {
             $title = !empty($field['title']) ? $field['title'] : '';
             $desc = !empty($field['desc']) ? $field['desc'] : '';
-            $name = !empty($field['id']) ? $field['id'] : '';
+            $name = !empty($field['id']) ? $field['id'].$index : '';
             $value = !empty($currentValue) ? $currentValue : '';
-
-            if (isset($field['require']) && is_array($field['require'])) {
-                $showField = true;
-
-                foreach ($field['require'] as $condition) {
-                    list($requiredField, $operator, $requiredValue) = $condition;
-                    $requiredFieldValue = sdo_option($dev_name, $requiredField);
-
-                    if (!self::checkCondition($requiredFieldValue, $operator, $requiredValue)) {
-                        $showField = false;
-                        break;
-                    }
-                }
-
-                if (!$showField) {
-                    return;
-                }
-            }
-
             ?>
             <label class="sdo-form-label" for="<?php echo $name; ?>"><?php echo $title; ?></label>
             <textarea id="<?php echo $name; ?>" name="<?php echo $name; ?>" class="sdo-input"><?php echo $value; ?></textarea>
@@ -256,31 +213,12 @@ if (!class_exists('SDO_Builder')) {
             </script>
             <?php
         }
-        public static function buttonset($dev_name, $field, $currentValue) {
+        public static function buttonset($dev_name, $field,$currentValue,$index = "") {
             $title = !empty($field['title']) ? $field['title'] : '';
             $desc = !empty($field['desc']) ? $field['desc'] : '';
-            $name = !empty($field['id']) ? $field['id'] : '';
+            $name = !empty($field['id']) ? $field['id'].$index : '';
             $options = !empty($field['options']) && is_array($field['options']) ? $field['options'] : array();
             $value = !empty($currentValue) ? $currentValue : '';
-
-            if (isset($field['require']) && is_array($field['require'])) {
-                $showField = true;
-
-                foreach ($field['require'] as $condition) {
-                    list($requiredField, $operator, $requiredValue) = $condition;
-                    $requiredFieldValue = sdo_option($dev_name, $requiredField);
-
-                    if (!self::checkCondition($requiredFieldValue, $operator, $requiredValue)) {
-                        $showField = false;
-                        break;
-                    }
-                }
-
-                if (!$showField) {
-                    return;
-                }
-            }
-
             echo '<label class="sdo-form-label">' . $title . '</label>';
             echo '<div class="sdo-button-set-box flex">';
 
@@ -295,30 +233,11 @@ if (!class_exists('SDO_Builder')) {
             echo '<p>' . $desc . '</p>';
         }
 
-        public static function switcher($dev_name, $field, $currentValue) {
+        public static function switcher($dev_name, $field,$currentValue,$index = "") {
             $title = !empty($field['title']) ? $field['title'] : '';
             $desc = !empty($field['desc']) ? $field['desc'] : '';
-            $name = !empty($field['id']) ? $field['id'] : '';
+            $name = !empty($field['id']) ? $field['id'].$index : '';
             $value = ($currentValue === "on") ? true : filter_var($currentValue, FILTER_VALIDATE_BOOLEAN);
-            if (isset($field['require']) && is_array($field['require'])) {
-                $showField = true;
-
-                foreach ($field['require'] as $condition) {
-                    list($requiredField, $operator, $requiredValue) = $condition;
-                    $requiredFieldValue = sdo_option($dev_name, $requiredField);
-
-                    if (!self::checkCondition($requiredFieldValue, $operator, $requiredValue)) {
-                        $showField = false;
-                        break;
-                    }
-                }
-
-                if (!$showField) {
-                    return;
-                }
-            }
-
-
             echo '<label class="sdo-form-label">' . $title . '</label>';
             echo '<div class="sdo-switch-box flex">';
             $id = $name;
@@ -328,31 +247,11 @@ if (!class_exists('SDO_Builder')) {
             echo '</div>';
             echo '<p>' . $desc . '</p>';
         }
-        public static function select($dev_name, $field, $currentValue) {
+        public static function select($dev_name, $field,$currentValue,$index = "") {
             $title = !empty($field['title']) ? $field['title'] : '';
             $desc = !empty($field['desc']) ? $field['desc'] : '';
-            $name = !empty($field['id']) ? $field['id'] : '';
+            $name = !empty($field['id']) ? $field['id'].$index : '';
             $options = !empty($field['options']) && is_array($field['options']) ? $field['options'] : array();
-
-            if (isset($field['require']) && is_array($field['require'])) {
-                $showField = true;
-
-                foreach ($field['require'] as $condition) {
-                    list($requiredField, $operator, $requiredValue) = $condition;
-                    $requiredFieldValue = sdo_option($dev_name, $requiredField);
-
-                    if (!self::checkCondition($requiredFieldValue, $operator, $requiredValue)) {
-                        $showField = false;
-                        break;
-                    }
-                }
-
-                if (!$showField) {
-                    return;
-                }
-            }
-
-
             echo '<label class="sdo-form-label" for="' . $name . '">' . $title . '</label>';
             echo '<select class="sdo-select" id="' . $name . '" name="' . $name . '">';
 
@@ -364,38 +263,51 @@ if (!class_exists('SDO_Builder')) {
             echo '</select>';
             echo '<p>' . $desc . '</p>';
         }
-        public static function repeater($dev_name, $field, $currentValue)
-        {
+        public static function repeater($dev_name, $field,$currentValue,$index = "") {
             $title = !empty($field['title']) ? $field['title'] : '';
             $desc = !empty($field['desc']) ? $field['desc'] : '';
-            $name = !empty($field['id']) ? $field['id'] : '';
+            $name = !empty($field['id']) ? $field['id'].$index : '';
             $fields = !empty($field['fields']) && is_array($field['fields']) ? $field['fields'] : array();
-
-            // Display the repeater field UI
-            echo '<div class="repeater-field" data-repeater-name="' . $name . '">';
+            echo '<div class="sdo-repeater-field" data-repeater-name="' . $name . '">';
             echo '<label class="sdo-form-label">' . $title . '</label>';
-            echo '<div class="repeater-container">';
-            echo '<button class="add-repeater-item">Add Item</button>';
-
-            // Check if $currentValue is empty and create a default empty item
+            echo '<div class="sdo-repeater-container">';
             if (empty($currentValue)) {
                 $currentValue = [array_fill_keys(array_column($fields, 'id'), '')];
             }
-
-            // Loop through the repeater items and display the fields
             foreach ($currentValue as $index => $item) {
-                echo '<div class="repeater-item" data-item-index="' . $index . '">';
-
+                echo '<div class="sdo-repeater-item" data-item-index="' . $index . '">';
+                echo '<div class="sdo-repeater-seperate-subfields">';
                 foreach ($fields as $subfield) {
-                    // Use the field_option method for subfields
-                    self::field_option($dev_name, $subfield);
+                    foreach ($item as $key => $value) {
+                        if (strpos($key, $subfield['id']) !== false) {
+                            $fieldKey = $key;
+                            $fieldValue = $value;
+                            break;
+                        }
+                    }
+                    $subfield['id'] = $fieldKey;
+                    self::field_option($dev_name, $subfield, true, $index ,$fieldValue);
                 }
-
-                echo '<button class="remove-repeater-item">Remove</button>';
+                echo '</div>';
+                echo '<div class="sdo-repeater-seperate-subbuttons">';
+                echo '<button class="sdo-remove-repeater-item"><svg width="25" height="25" viewBox="0 0 24 24" stroke-width="1.5" stroke="#f00" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                  <path d="M4 7h16" />
+                  <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                  <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                  <path d="M10 12l4 4m0 -4l-4 4" />
+                </svg>حذف </button>';
+                echo '</div>';
                 echo '</div>';
             }
-
             echo '</div>';
+            echo '<button class="sdo-add-repeater-item">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-plus" width="25" height="25" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                  <path d="M12 5l0 14" />
+                  <path d="M5 12l14 0" />
+                </svg>
+                </button>';
             echo '</div>';
             echo '<p>' . $desc . '</p>';
         }

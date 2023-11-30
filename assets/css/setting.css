@@ -272,3 +272,59 @@
     font-size: 15px;
     border-radius: 8px;
 }
+.sdo-repeater-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+    padding: 20px;
+}
+.sdo-repeater-item {
+    border: 1px solid #eee;
+    padding: 20px;
+    border-radius: 15px;
+    display: flex;
+    flex: 1;
+    gap: 20px;
+    justify-content: space-between;
+}
+.sdo-repeater-seperate-subfields {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+.sdo-repeater-seperate-subbuttons {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+.sdo-remove-repeater-item {
+    background: transparent;
+    border: 2px solid #f00;
+    display: flex;
+    padding: 5px 8px;
+    justify-content: center;
+    align-items: center;
+    gap: 3px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #f00;
+    border-radius: 5px;
+    cursor: pointer;
+}
+#sdo svg {
+    pointer-events: none;
+}
+.sdo-add-repeater-item {
+    background: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+    border-radius: 10px;
+    border: 2px solid var(--sdo-main-color);
+    cursor: pointer;
+    margin-right: 20px;
+}

@@ -22,8 +22,17 @@ if (!class_exists('SDO_Ajax_Handler')) {
                     $data_to_save = [];
                     foreach ($field_ids as $field_id => $field_type) {
                         if (isset($data[$field_id])) {
-                            $field_value = sanitize_text_field($data[$field_id]);
-                            $sanitized_value = esc_html($field_value);
+                            if ($field_type == "repeater") {
+                                parse_str($data[$field_id], $field_value_post);
+                                foreach ($field_value_post as $key => $subarray) {
+                                    parse_str($subarray, $subarray_parsed);
+                                    $field_value_posts[$key] = $subarray_parsed;
+                                }
+                                $sanitized_value = $field_value_posts;
+                            } else {
+                                $field_value = sanitize_text_field($data[$field_id]);
+                                $sanitized_value = esc_html($field_value);
+                            }
                             $data_to_save[$field_id] = $sanitized_value;
                         }
                     }
@@ -76,6 +85,7 @@ if (!class_exists('SDO_Ajax_Handler')) {
                 $saved_data[$field_id] = $sanitized_value;
             }
             update_option($dev_name, $saved_data);
+//            delete_option($dev_name);
         }
     }
     new SDO_Ajax_Handler;
