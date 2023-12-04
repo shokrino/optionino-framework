@@ -213,6 +213,35 @@ if (!class_exists('SDO_Builder')) {
             </script>
             <?php
         }
+        public static function image($dev_name, $field, $currentValue, $index = "") {
+            $title = !empty($field['title']) ? $field['title'] : '';
+            $desc = !empty($field['desc']) ? $field['desc'] : '';
+            $name = !empty($field['id']) ? $field['id'] . $index : '';
+            $value = !empty($currentValue) ? $currentValue : '';
+            ?>
+            <label class="sdo-form-label" for="<?php echo $name; ?>"><?php echo $title; ?></label>
+            <div class="sdo-box-image-field">
+                <div class="inner-image-box-sdo">
+                    <input type="text" class="sdo-input image-url" id="<?php echo $name; ?>" name="<?php echo $name; ?>"
+                           value="<?php echo $value; ?>">
+                    <input type="button" class="sdo-button upload-image-button" data-image-field="<?php echo $name; ?>" value="آپلود تصویر">
+                    <p><?php echo $desc; ?></p>
+                </div>
+                <img id="<?php echo $name; ?>-preview" class="uploaded-image sdo-image-preview" src="<?php echo esc_url($value); ?>" style="max-width: 100%;">
+            </div>
+            <?php
+        }
+        public static function color($dev_name, $field, $current_value, $index = '') {
+            $title = !empty($field['title']) ? $field['title'] : '';
+            $desc = !empty($field['desc']) ? $field['desc'] : '';
+            $name = !empty($field['id']) ? $field['id'] . $index : '';
+            $value = !empty($current_value) ? $current_value : '';
+            ?>
+            <label class="sdo-form-label" for="<?php echo $name; ?>"><?php echo $title; ?></label>
+            <input type="color" class="sdo-color-selector" id="<?php echo $name; ?>" name="<?php echo $name; ?>" value="<?php echo $value; ?>">
+            <p><?php echo $desc; ?></p>
+            <?php
+        }
         public static function buttonset($dev_name, $field,$currentValue,$index = "") {
             $title = !empty($field['title']) ? $field['title'] : '';
             $desc = !empty($field['desc']) ? $field['desc'] : '';

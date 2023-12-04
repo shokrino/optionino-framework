@@ -328,3 +328,34 @@
     cursor: pointer;
     margin-right: 20px;
 }
+.sdo-box-image-field {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+}
+.sdo-image-preview {
+    max-height: 100px;
+    border: 1px solid #e5e5e5;
+    border-radius: 15px;
+    min-width: 100px;
+    height: 100px;
+}
+.inner-image-box-sdo {
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+}
+.inner-image-box-sdo p {
+    margin: 0 0 1em;
+}
+.upload-image-button {
+    background: var(--sdo-main-color);
+    border: 2px solid transparent;
+    border-radius: 9px;
+    padding: 6px 12px;
+    color: white;
+    cursor: pointer;
+}

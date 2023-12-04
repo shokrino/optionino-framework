@@ -99,7 +99,6 @@ function openTabSDO(evt, tabName) {
 document.addEventListener("DOMContentLoaded", function () {
     const fields = Array.from(document.querySelectorAll('.sdo-box-option'));
     const fieldsWithRequire = Array.from(document.querySelectorAll('[data-require-0]'));
-
     function checkConditions(field,operator,requiredValue) {
         let requiredField = document.getElementById(field);
 
@@ -135,7 +134,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 return false;
         }
     }
-
     function updateFieldVisibility(field) {
         const requiredFieldConditions = Array.from(field.attributes)
             .filter(attr => attr.name.startsWith('data-require-'))
@@ -148,7 +146,6 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     }
-
     function updateConditionalOptionsDisplay() {
         const conditionalOptions = Array.from(document.querySelectorAll('.sdo-conditional-option'));
         conditionalOptions.forEach(option => {
@@ -160,16 +157,12 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     }
-
     function updateOnLoadAndChange() {
         fieldsWithRequire.forEach(updateFieldVisibility);
         updateConditionalOptionsDisplay();
     }
-
     updateOnLoadAndChange();
-
     fields.forEach(input => input.addEventListener('change', updateOnLoadAndChange));
-
     document.addEventListener('click', function (event) {
         if (event.target.classList.contains('sdo-add-repeater-item')) {
             event.preventDefault();
@@ -206,4 +199,39 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
     });
+    let fileFrames = {};
+    document.querySelectorAll('.upload-image-button').forEach(function (button) {
+        button.addEventListener('click', function (event) {
+            event.preventDefault();
+            let identifier = button.getAttribute('data-image-field');
+            if (fileFrames[identifier]) {
+                fileFrames[identifier].open();
+                return;
+            }
+            fileFrames[identifier] = wp.media.frames.fileFrame = wp.media({
+                title: 'انتخاب یا آپلود تصویر',
+                button: {
+                    text: 'انتخاب این تصویر'
+                },
+                multiple: false
+            });
+            fileFrames[identifier].on('select', function () {
+                var attachment = fileFrames[identifier].state().get('selection').first().toJSON();
+                let imageUrlInput = document.getElementById(identifier);
+                if (imageUrlInput) {
+                    imageUrlInput.value = attachment.url;
+                }
+                let previewImage = document.getElementById(identifier + '-preview');
+                if (previewImage) {
+                    previewImage.src = attachment.url;
+                }
+                wp.media.model.settings.post.id = wpMediaPostId;
+            });
+            fileFrames[identifier].open();
+        });
+    });
+    let colorField = document.querySelectorAll('.sdo-color-selector');
+    if (colorField) {
+        let colorPicker = new wp.ColorPicker(colorField);
+    }
 });
