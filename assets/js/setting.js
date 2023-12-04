@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded", function() {
         repeaterItems.forEach((repeaterItem, index) => {
             let subArray = {};
             repeaterItem.querySelectorAll('input, textarea, select').forEach(input => {
-                subArray[input.name] = input.value;
+                subArray[input.name.replace(/_\d+$/, '').replace(/^_/, '')] = input.value;
             });
             mainArray.push(encodeRepeaterValues(subArray));
         });

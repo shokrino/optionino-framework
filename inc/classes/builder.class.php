@@ -278,14 +278,7 @@ if (!class_exists('SDO_Builder')) {
                 echo '<div class="sdo-repeater-item" data-item-index="' . $index . '">';
                 echo '<div class="sdo-repeater-seperate-subfields">';
                 foreach ($fields as $subfield) {
-                    foreach ($item as $key => $value) {
-                        if (strpos($key, $subfield['id']) !== false) {
-                            $fieldKey = $key;
-                            $fieldValue = $value;
-                            break;
-                        }
-                    }
-                    $subfield['id'] = $fieldKey;
+                    $fieldValue = $item[$subfield['id']];
                     self::field_option($dev_name, $subfield, true, $index ,$fieldValue);
                 }
                 echo '</div>';
