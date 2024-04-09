@@ -20,6 +20,10 @@ if (!class_exists('SDO')) {
             add_action('admin_menu', [$this,'create_menu']);
             add_action( 'init', [$this,'sdo_load_textdomain'] );
         }
+        
+        public static function setup() {
+
+        }
         public static function set_config($dev_name, $settings) {
             foreach (self::$settings as $existing_config) {
                 if ($existing_config['dev_name'] === $dev_name) {
@@ -75,6 +79,23 @@ if (!class_exists('SDO')) {
             foreach ($tabfields as $tab => $fields) {
                 self::$fields[$dev_name][$tab] = $fields;
             }
+            $get_fields = self::$fields;
+            $fields_defaults = array();
+            foreach ($get_fields as $dev_name => $tabs) {
+                foreach ($tabs as $tab_name => $arrays) {
+                    foreach ($arrays as $names => $field) {
+                        foreach ($fields as $field) {
+                            if (!empty($field['default'])) {
+                                $fields_defaults[$field['id']] = $field['default'];
+                            }
+                        }
+                    }
+                }
+                $is_set_dev = get_option($dev_name, "");
+                if (empty($is_set_dev)) {
+                    SDO_Ajax_Handler::defaults($dev_name, $fields_defaults);
+                }
+            }
         }
         public function create_menu() {
             $settings = self::$settings;
@@ -119,9 +140,6 @@ if (!class_exists('SDO')) {
         }
         public function sdo_load_textdomain() {
             load_plugin_textdomain( SDO_TEXTDOMAIN, false,basename( SDO_PATH ) . '/languages/' );
-        }
-        public function setup() {
-
         }
         public function wp_scripts() {
             wp_enqueue_script('jquery');

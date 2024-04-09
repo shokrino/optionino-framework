@@ -10,7 +10,7 @@
  * Description: Professional Tool to develop your WordPress theme and plugin easier
  * @package   SDO Framework - WordPress Options
  * @link      https://shokrino.com
- * @copyright 2023 Shokrino
+ * @copyright 2024 Shokrino
  */
 define('SDOPATH' , defined( 'ABSPATH' ));
 defined( 'SDOPATH' ) || exit;
