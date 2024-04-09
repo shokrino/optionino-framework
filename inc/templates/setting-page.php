@@ -6,7 +6,8 @@
  * @since 1.0.0
  *
  */
-SDO::admin_scripts();
+$sdo_instance = new SDO();
+$sdo_instance->admin_scripts();
 SDO_Builder::container_start();
 SDO_Builder::title($settings['dev_title']);
 SDO_Builder::section_start($settings['dev_name']);

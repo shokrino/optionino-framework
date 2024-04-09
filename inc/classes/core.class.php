@@ -124,9 +124,12 @@ if (!class_exists('SDO')) {
 
         }
         public function wp_scripts() {
-
+            wp_enqueue_script('jquery');
         }
         public function admin_scripts() {
+            if (!did_action('wp_enqueue_media')) {
+                wp_enqueue_media();
+            }
             wp_enqueue_style( 'sdo-settings-page', SDO_ASSETS.'css/setting.css', array(), false, 'all');
             wp_enqueue_script( 'sdo-settings-page', SDO_ASSETS.'js/setting.js' , array() , false , true);
             wp_localize_script( 'sdo-settings-page', 'data_sdo', array(
