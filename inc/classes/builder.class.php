@@ -57,7 +57,7 @@ if (!class_exists('SDO_Builder')) {
         public static function form_end($dev_name) {
             echo '<input type="hidden" name="dev_name" value="'.$dev_name.'">
                    <div class="sdo-options-save-box">
-                <button type="submit" class="submit-sdo" name="save-sdo">'.__('save changes', 'sdo').'</button>
+                <button type="submit" class="submit-sdo" name="save-sdo">'.__('save changes', SDO_TEXTDOMAIN).'</button>
             </div>
             </form>';
         }
@@ -74,7 +74,7 @@ if (!class_exists('SDO_Builder')) {
             echo '<div class="tab">
             <div class="tab-information flex-center">
                 <img src="'.self::logo($dev_name).'">
-                <span>'.__('Version: ', 'sdo').'<strong>'.$version.'</strong></span>
+                <span>'.__('Version: ', SDO_TEXTDOMAIN).'<strong>'.$version.'</strong></span>
             </div>';
         }
         public static function tab_end() {

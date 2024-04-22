@@ -25,7 +25,6 @@ $plugin_data = get_file_data(__FILE__, array('Version' => 'Version'), false);
 $current_theme = wp_get_theme()->get( 'Name' );
 define('SDO_NAME', $plugin_data_name['Plugin Name']);
 define('SDO_VERSION', $plugin_data['Version']);
-define('SDO_TEXTDOMAIN', 'sdo');
 define('SDO_CURRENT_THEME', $current_theme);
 define('SDO_CURRENT_PHP',substr(phpversion(), 0, strpos(phpversion(), '.', strpos(phpversion(), '.') + 1)));
 

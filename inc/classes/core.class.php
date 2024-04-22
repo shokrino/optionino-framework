@@ -28,7 +28,7 @@ if (!class_exists('SDO')) {
             foreach (self::$settings as $existing_config) {
                 if ($existing_config['dev_name'] === $dev_name) {
                     add_action('admin_notices', function() use ($dev_name) {
-                        echo __('<div class="error"><p>Configuration with ID "' . esc_html($dev_name) . '" is already in use. Please use a unique ID.</p></div>','sdo');
+                        echo __('<div class="error"><p>Configuration with ID "' . esc_html($dev_name) . '" is already in use. Please use a unique ID.</p></div>',SDO_TEXTDOMAIN);
                     });
                     return;
                 }
@@ -43,7 +43,7 @@ if (!class_exists('SDO')) {
             foreach (self::$tabs[$dev_name] as $existing_tab) {
                 if ($existing_tab['id'] === $tab_settings['id']) {
                     add_action('admin_notices', function() use ($tab_settings) {
-                        echo __('<div class="error"><p>Tab ID "' . esc_html($tab_settings['id']) . '" is already in use. Please use a unique ID.</p></div>','sdo');
+                        echo __('<div class="error"><p>Tab ID "' . esc_html($tab_settings['id']) . '" is already in use. Please use a unique ID.</p></div>',SDO_TEXTDOMAIN);
                     });
                     return;
                 }
@@ -69,7 +69,7 @@ if (!class_exists('SDO')) {
                 foreach ($tabFieldIds as $fieldId) {
                     if (in_array($fieldId, $existingFieldIds) || is_id_duplicate_sdo($tabFieldIds, $fieldId)) {
                         add_action('admin_notices', function() use ($fieldId, $tab) {
-                            echo '<div class="error"><p>' . esc_html__('Field ID "' . $fieldId . '" is already in use. Please use a unique ID.', 'sdo') . '</p></div>';
+                            echo '<div class="error"><p>' . esc_html__('Field ID "' . $fieldId . '" is already in use. Please use a unique ID.', SDO_TEXTDOMAIN) . '</p></div>';
                         });
                         return;
                     }
@@ -136,7 +136,7 @@ if (!class_exists('SDO')) {
             add_filter( 'admin_footer_text', [$this,'admin_footer_text'] );
         }
         public function admin_footer_text() {
-            _e('Powered by <a href="http://shokrino.com/" target="_blank">ShokrinoDevOptions Framework</a>','sdo');
+            _e('Powered by <a href="http://shokrino.com/" target="_blank">ShokrinoDevOptions Framework</a>',SDO_TEXTDOMAIN);
         }
         public function sdo_load_textdomain() {
             load_plugin_textdomain( SDO_TEXTDOMAIN, false,basename( SDO_PATH ) . '/languages/' );
