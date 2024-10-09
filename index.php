@@ -1,7 +1,7 @@
 <?php
 /**
  * Silence is golden.
- * Shokrino Dev Options - framework
+ * Optionino Framework
  * Author: shokrino.com
- * Documentation: shokrino.com/docs/sdo
+ * Documentation: shokrino.com/docs/optionino
 */

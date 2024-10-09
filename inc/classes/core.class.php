@@ -1,4 +1,4 @@
-<?php defined( 'SDOPATH' ) || exit;
+<?php defined( 'ABSPATH' ) || exit;
 /**
  * Core Class
  *
@@ -6,8 +6,8 @@
  * @since 1.0.0
  *
  */
-if (!class_exists('SDO')) {
-    class SDO {
+if (!class_exists('OPTNNO')) {
+    class OPTNNO {
         public static $settings = array();
         public static $tabs = array();
         public static $fields = array();
@@ -18,7 +18,7 @@ if (!class_exists('SDO')) {
             add_action('wp_enqueue_scripts', [$this,'wp_scripts']);
             add_action('wp_head', [$this,'wp_head']);
             add_action('admin_menu', [$this,'create_menu']);
-            add_action( 'init', [$this,'sdo_load_textdomain'] );
+            add_action( 'init', [$this,'optionino_load_textdomain'] );
         }
         
         public static function setup() {
@@ -28,7 +28,7 @@ if (!class_exists('SDO')) {
             foreach (self::$settings as $existing_config) {
                 if ($existing_config['dev_name'] === $dev_name) {
                     add_action('admin_notices', function() use ($dev_name) {
-                        echo __('<div class="error"><p>Configuration with ID "' . esc_html($dev_name) . '" is already in use. Please use a unique ID.</p></div>',SDO_TEXTDOMAIN);
+                        echo __('<div class="error"><p>Configuration with ID "' . esc_html($dev_name) . '" is already in use. Please use a unique ID.</p></div>',OPTNNO_TEXTDOMAIN);
                     });
                     return;
                 }
@@ -43,7 +43,7 @@ if (!class_exists('SDO')) {
             foreach (self::$tabs[$dev_name] as $existing_tab) {
                 if ($existing_tab['id'] === $tab_settings['id']) {
                     add_action('admin_notices', function() use ($tab_settings) {
-                        echo __('<div class="error"><p>Tab ID "' . esc_html($tab_settings['id']) . '" is already in use. Please use a unique ID.</p></div>',SDO_TEXTDOMAIN);
+                        echo __('<div class="error"><p>Tab ID "' . esc_html($tab_settings['id']) . '" is already in use. Please use a unique ID.</p></div>',OPTNNO_TEXTDOMAIN);
                     });
                     return;
                 }
@@ -67,9 +67,9 @@ if (!class_exists('SDO')) {
             foreach ($tabfields as $tab => $fields) {
                 $tabFieldIds = array_column($fields, 'id');
                 foreach ($tabFieldIds as $fieldId) {
-                    if (in_array($fieldId, $existingFieldIds) || is_id_duplicate_sdo($tabFieldIds, $fieldId)) {
+                    if (in_array($fieldId, $existingFieldIds) || is_id_duplicate_optionino($tabFieldIds, $fieldId)) {
                         add_action('admin_notices', function() use ($fieldId, $tab) {
-                            echo '<div class="error"><p>' . esc_html__('Field ID "' . $fieldId . '" is already in use. Please use a unique ID.', SDO_TEXTDOMAIN) . '</p></div>';
+                            echo '<div class="error"><p>' . esc_html__('Field ID "' . $fieldId . '" is already in use. Please use a unique ID.', OPTNNO_TEXTDOMAIN) . '</p></div>';
                         });
                         return;
                     }
@@ -93,7 +93,7 @@ if (!class_exists('SDO')) {
                 }
                 $is_set_dev = get_option($dev_name, "");
                 if (empty($is_set_dev)) {
-                    SDO_Ajax_Handler::defaults($dev_name, $fields_defaults);
+                    OPTNNO_Ajax_Handler::defaults($dev_name, $fields_defaults);
                 }
             }
         }
@@ -132,14 +132,14 @@ if (!class_exists('SDO')) {
             }
         }
         public function page_content($settings) {
-            require_once SDO_TMPL.'setting-page.php';
+            require_once OPTNNO_TMPL.'setting-page.php';
             add_filter( 'admin_footer_text', [$this,'admin_footer_text'] );
         }
         public function admin_footer_text() {
-            _e('Powered by <a href="http://shokrino.com/" target="_blank">ShokrinoDevOptions Framework</a>',SDO_TEXTDOMAIN);
+            _e('Powered by <a href="http://shokrino.com/" target="_blank">ShokrinoDevOptions Framework</a>',OPTNNO_TEXTDOMAIN);
         }
-        public function sdo_load_textdomain() {
-            load_plugin_textdomain( SDO_TEXTDOMAIN, false,basename( SDO_PATH ) . '/languages/' );
+        public function optionino_load_textdomain() {
+            load_plugin_textdomain( OPTNNO_TEXTDOMAIN, false,basename( OPTNNO_PATH ) . '/languages/' );
         }
         public function wp_scripts() {
             wp_enqueue_script('jquery');
@@ -148,16 +148,18 @@ if (!class_exists('SDO')) {
             if (!did_action('wp_enqueue_media')) {
                 wp_enqueue_media();
             }
-            wp_enqueue_style( 'sdo-settings-page', SDO_ASSETS.'css/setting.css', array(), false, 'all');
-            wp_enqueue_script( 'sdo-settings-page', SDO_ASSETS.'js/setting.js' , array() , false , true);
-            wp_localize_script( 'sdo-settings-page', 'data_sdo', array(
+            wp_enqueue_style('wp-color-picker');
+            wp_enqueue_script('wp-color-picker');
+            wp_enqueue_style( 'optionino-settings-page', OPTNNO_ASSETS.'css/setting.css', array(), false, 'all');
+            wp_enqueue_script( 'optionino-settings-page', OPTNNO_ASSETS.'js/setting.js' , array() , false , true);
+            wp_localize_script( 'optionino-settings-page', 'data_optionino', array(
                 'ajax_url' => admin_url( 'admin-ajax.php' ),
-                'nonce' => wp_create_nonce('sdo_nonce')
+                'nonce' => wp_create_nonce('optionino_nonce')
             ));
         }
         public function wp_head() {
 
         }
     }
-    new SDO;
+    new OPTNNO;
 }

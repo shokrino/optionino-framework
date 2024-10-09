@@ -1,6 +1,6 @@
 :root {
-    --sdo-main-color: #2c77de;
-    --sdo-main-font: "roboto";
+    --optionino-main-color: #2c77de;
+    --optionino-main-font: "roboto";
 }
 .flex {
     display: -webkit-box;
@@ -27,7 +27,7 @@
 .relative {
     position: relative;
 }
-.sdo-header {
+.optionino-header {
     flex-wrap: wrap;
     flex-direction: column;
     background: #fff;
@@ -35,32 +35,32 @@
     border-radius: 20px;
     box-shadow: 0 5px 14px -10px #00000070;
 }
-.sdo-section {
+.optionino-section {
     flex-wrap: wrap;
     padding: 3%;
     background: white;
     border-radius: 25px;
     min-height: 600px;
     flex-direction: row-reverse;
-    font-family: var(--sdo-main-font) !important;
+    font-family: var(--optionino-main-font) !important;
 }
-.sdo-section.rtl {
+.optionino-section.rtl {
     flex-direction: row;
 }
-.sdo-section .tab {
+.optionino-section .tab {
     width: 30%;
     height: max-content;
 }
-.sdo-section .tab-information {
+.optionino-section .tab-information {
     padding: 25px;
     flex-direction: column;
     row-gap: 10px;
 }
-.sdo-section .tab-information > img {
+.optionino-section .tab-information > img {
     width: 160px;
     height: auto;
 }
-.sdo-section .tablinks {
+.optionino-section .tablinks {
     background-color: transparent;
     color: black;
     padding: 22px 16px;
@@ -78,54 +78,54 @@
     border-top: 1px solid transparent;
     border-bottom: 1px solid transparent;
 }
-.sdo-section .tabcontent {
+.optionino-section .tabcontent {
     padding: 5px 20px;
-    border-right: 3px solid var(--sdo-main-color);
+    border-right: 3px solid var(--optionino-main-color);
     width: 100%;
     height: 100%;
     border-radius: 20px 0 0 20px;
 }
-.sdo-section .tabcontent:not(:first-child) {
+.optionino-section .tabcontent:not(:first-child) {
     display: none;
 }
-.sdo-section .tab button.active,
-.sdo-section .tab button:hover {
-    border-right: 3px solid var(--sdo-main-color);
+.optionino-section .tab button.active,
+.optionino-section .tab button:hover {
+    border-right: 3px solid var(--optionino-main-color);
     transition: 200ms;
     border-top: 1px solid #eee;
     border-bottom: 1px solid #eee;
     box-shadow: -5px 3px 11px -2px #36454f0d;
 }
-.sdo-section .tab button.active svg,.sdo-section .tab button:hover svg {
-    stroke: var(--sdo-main-color);
+.optionino-section .tab button.active svg,.optionino-section .tab button:hover svg {
+    stroke: var(--optionino-main-color);
 }
-.sdo-tab-titles-box {
+.optionino-tab-titles-box {
     display: flex;
     justify-content: right;
     align-items: flex-start;
     flex-direction: column;
     gap: 5px;
 }
-.sdo-title-tab-options {
+.optionino-title-tab-options {
     font-size: 17px;
     font-weight: 600;
     color: #36454f;
 }
-.sdo-tab-content-outer {
+.optionino-tab-content-outer {
     min-height: 100%;
     display: flex;
     flex: 1;
     flex-direction: column;
     row-gap: 15px;
 }
-.sdo-options-save-box {
+.optionino-options-save-box {
     display: flex;
     justify-content: end;
     padding: 0 3%;
 }
-.sdo-options-save-box .submit-sdo {
+.optionino-options-save-box .submit-optionino {
     display: flex;
-    background: var(--sdo-main-color);
+    background: var(--optionino-main-color);
     border: 2px solid transparent;
     border-radius: 9px;
     padding: 8px 25px 10px;
@@ -134,18 +134,18 @@
     font-weight: 600;
     cursor: pointer;
 }
-.sdo-box-option {
+.optionino-box-option {
     display: flex;
     flex-direction: column;
     row-gap: 5px;
 }
-.sdo-form-label {
+.optionino-form-label {
     font-weight: bold;
     display: inline-block;
     color: #333;
     font-size: .875rem;
 }
-.sdo-section input[type="date"], .sdo-section input[type="datetime-local"], .sdo-section input[type="datetime"], .sdo-section input[type="email"], .sdo-section input[type="month"], .sdo-section input[type="number"], .sdo-section input[type="password"], .sdo-section input[type="search"], .sdo-section input[type="tel"], .sdo-section input[type="text"], .sdo-section input[type="time"], .sdo-section input[type="url"], .sdo-section input[type="week"] {
+.optionino-section input[type="date"], .optionino-section input[type="datetime-local"], .optionino-section input[type="datetime"], .optionino-section input[type="email"], .optionino-section input[type="month"], .optionino-section input[type="number"], .optionino-section input[type="password"], .optionino-section input[type="search"], .optionino-section input[type="tel"], .optionino-section input[type="text"], .optionino-section input[type="time"], .optionino-section input[type="url"], .optionino-section input[type="week"] {
     height: 40px;
     vertical-align: middle;
     display: inline-block;
@@ -162,47 +162,47 @@
     transition-property: color,background-color,border;
     overflow: visible;
     border-radius: 7px !important;
-    font-family: var(--sdo-main-font) !important;
+    font-family: var(--optionino-main-font) !important;
 }
-.sdo-section input[type="date"]:focus, .sdo-section input[type="datetime-local"]:focus, .sdo-section input[type="datetime"]:focus, .sdo-section input[type="email"]:focus, .sdo-section input[type="month"]:focus, .sdo-section input[type="number"]:focus, .sdo-section input[type="password"]:focus, .sdo-section input[type="search"]:focus, .sdo-section input[type="tel"]:focus, .sdo-section input[type="text"]:focus, .sdo-section input[type="time"]:focus, .sdo-section input[type="url"]:focus, .sdo-section input[type="week"]:focus {
-    border-color: var(--sdo-main-color);
+.optionino-section input[type="date"]:focus, .optionino-section input[type="datetime-local"]:focus, .optionino-section input[type="datetime"]:focus, .optionino-section input[type="email"]:focus, .optionino-section input[type="month"]:focus, .optionino-section input[type="number"]:focus, .optionino-section input[type="password"]:focus, .optionino-section input[type="search"]:focus, .optionino-section input[type="tel"]:focus, .optionino-section input[type="text"]:focus, .optionino-section input[type="time"]:focus, .optionino-section input[type="url"]:focus, .optionino-section input[type="week"]:focus {
+    border-color: var(--optionino-main-color);
 }
-.sdo-box-option > p {
+.optionino-box-option > p {
     margin-top: 0 !important;
 }
-.sdo-button-set-box {
-    border: 2px solid var(--sdo-main-color);
+.optionino-button-set-box {
+    border: 2px solid var(--optionino-main-color);
     width: fit-content;
     flex: 1;
     border-radius: 8px;
     gap: 10px;
 }
-.sdo-radio {
+.optionino-radio {
     display: none !important;
 }
-.sdo-button-label {
+.optionino-button-label {
     position: relative;
     z-index: 1;
     cursor: pointer;
     padding: 8px 14px;
     text-align: center;
 }
-.sdo-radio.button-set:checked + .sdo-button-label {
+.optionino-radio.button-set:checked + .optionino-button-label {
     border-radius: 6px;
-    background: var(--sdo-main-color);
+    background: var(--optionino-main-color);
     color: white;
     transform: scale(1.15);
     line-height: 1;
     align-items: center;
     transition: .15s background-color ease-in-out;
 }
-.sdo-switch-box {
+.optionino-switch-box {
     position: relative;
     display: inline-block;
     width: 50px;
     height: 25px;
 }
-.sdo-switch-label {
+.optionino-switch-label {
     position: absolute;
     cursor: pointer;
     top: 0;
@@ -213,10 +213,10 @@
     border-radius: 12.5px;
     transition: background-color 0.3s;
 }
-.sdo-switch-checkbox:checked + .sdo-switch-label {
-    background-color: var(--sdo-main-color);
+.optionino-switch-checkbox:checked + .optionino-switch-label {
+    background-color: var(--optionino-main-color);
 }
-.sdo-switch-label:after {
+.optionino-switch-label:after {
     content: "";
     position: absolute;
     width: 20px;
@@ -227,13 +227,13 @@
     left: 2.5px;
     transition: transform 0.3s;
 }
-.sdo-switch-checkbox:checked + .sdo-switch-label:after {
+.optionino-switch-checkbox:checked + .optionino-switch-label:after {
     transform: translateX(25px);
 }
-#sdo.loading .loading-spinner-sdo {
+#optionino.loading .loading-spinner-optionino {
     display: flex;
 }
-.loading-spinner-sdo {
+.loading-spinner-optionino {
     position: fixed;
     width: 100%;
     display: none;
@@ -247,7 +247,7 @@
     align-items: center;
     backdrop-filter: blur(3px);
 }
-.loading-spinner-sdo > svg {
+.loading-spinner-optionino > svg {
     max-width: 135px;
     color: #fff;
 }
@@ -272,14 +272,14 @@
     font-size: 15px;
     border-radius: 8px;
 }
-.sdo-repeater-container {
+.optionino-repeater-container {
     display: flex;
     flex-direction: column;
     justify-content: center;
     gap: 10px;
     padding: 20px;
 }
-.sdo-repeater-item {
+.optionino-repeater-item {
     border: 1px solid #eee;
     padding: 20px;
     border-radius: 15px;
@@ -288,19 +288,19 @@
     gap: 20px;
     justify-content: space-between;
 }
-.sdo-repeater-seperate-subfields {
+.optionino-repeater-seperate-subfields {
     flex: 1;
     display: flex;
     justify-content: center;
     flex-direction: column;
 }
-.sdo-repeater-seperate-subbuttons {
+.optionino-repeater-seperate-subbuttons {
     display: flex;
     justify-content: center;
     flex-direction: column;
     align-items: center;
 }
-.sdo-remove-repeater-item {
+.optionino-remove-repeater-item {
     background: transparent;
     border: 2px solid #f00;
     display: flex;
@@ -314,33 +314,33 @@
     border-radius: 5px;
     cursor: pointer;
 }
-#sdo svg {
+#optionino svg {
     pointer-events: none;
 }
-.sdo-add-repeater-item {
+.optionino-add-repeater-item {
     background: transparent;
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 5px;
     border-radius: 10px;
-    border: 2px solid var(--sdo-main-color);
+    border: 2px solid var(--optionino-main-color);
     cursor: pointer;
     margin-right: 20px;
 }
-.sdo-box-image-field {
+.optionino-box-image-field {
     display: flex;
     flex-direction: row;
     gap: 15px;
 }
-.sdo-image-preview {
+.optionino-image-preview {
     max-height: 100px;
     border: 1px solid #e5e5e5;
     border-radius: 15px;
     min-width: 100px;
     height: 100px;
 }
-.inner-image-box-sdo {
+.inner-image-box-optionino {
     display: flex;
     justify-content: center;
     align-items: start;
@@ -348,11 +348,11 @@
     gap: 8px;
     flex: 1;
 }
-.inner-image-box-sdo p {
+.inner-image-box-optionino p {
     margin: 0 0 1em;
 }
 .upload-image-button {
-    background: var(--sdo-main-color);
+    background: var(--optionino-main-color);
     border: 2px solid transparent;
     border-radius: 9px;
     padding: 6px 12px;

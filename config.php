@@ -1,4 +1,4 @@
-<?php defined( 'SDOPATH' ) || exit;
+<?php defined( 'ABSPATH' ) || exit;
 /**
- * Config SDO framework
+ * Config Optinino framework
  */
