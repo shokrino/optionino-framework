@@ -30,7 +30,25 @@ if (!class_exists('OPTNNO_Builder')) {
             echo '<h1 class="optionino-header-title wp-heading-inline">'.$title.'</h1>';
         }
         public static function container_start() {
-            echo '<div id="optionino" class="optionino-container wrap">';
+            ?>
+            <script>
+            function openTabOptnno(evt, tabName) {
+                const tabcontent = document.getElementsByClassName("tabcontent");
+                for (let i = 0; i < tabcontent.length; i++) {
+                    tabcontent[i].style.display = "none";
+                }
+
+                const tablinks = document.getElementsByClassName("tablinks");
+                for (let i = 0; i < tablinks.length; i++) {
+                    tablinks[i].className = tablinks[i].className.replace(" active", "");
+                }
+
+                document.getElementById(tabName).style.display = "block";
+                evt.currentTarget.className += " active";
+            }
+            </script>
+            <div id="optionino" class="optionino-container wrap">
+            <?php
         }
         public static function container_end() {
             echo '</div>';
@@ -85,7 +103,7 @@ if (!class_exists('OPTNNO_Builder')) {
             if (isset($tabsArray[$dev_name]) && is_array($tabsArray[$dev_name])) {
                 foreach ($tabsArray[$dev_name] as $tab) {
                     ?>
-                    <button class="tablinks flex" onclick="openTabOPTNNO(event, '<?php echo $tab['id']; ?>')">
+                    <button class="tablinks flex" onclick="openTabOptnno(event, '<?php echo $tab['id']; ?>')">
                         <div class="optionino-tab-titles-box">
                             <div class="optionino-title-tab-options">
                                 <?php echo $tab['title']; ?>

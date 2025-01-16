@@ -65,7 +65,7 @@ if (!class_exists('OPTNNO_Ajax_Handler')) {
         public static function defaults($dev_name, $defaults) {
             self::save_data($dev_name, $defaults);
         }
-        private static function save_data($dev_name, $data_to_save) {
+        public static function save_data($dev_name, $data_to_save) {
             $saved_data = get_option($dev_name, array());
             foreach ($data_to_save as $field_id => $sanitized_value) {
                 $saved_data[$field_id] = $sanitized_value;

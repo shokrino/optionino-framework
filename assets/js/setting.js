@@ -102,21 +102,6 @@ document.addEventListener("DOMContentLoaded", function() {
         return params.toString();
     }
 
-    function openTabOPTNNO(evt, tabName) {
-        const tabcontent = document.getElementsByClassName("tabcontent");
-        for (let i = 0; i < tabcontent.length; i++) {
-            tabcontent[i].style.display = "none";
-        }
-
-        const tablinks = document.getElementsByClassName("tablinks");
-        for (let i = 0; i < tablinks.length; i++) {
-            tablinks[i].className = tablinks[i].className.replace(" active", "");
-        }
-
-        document.getElementById(tabName).style.display = "block";
-        evt.currentTarget.className += " active";
-    }
-
     const fields = Array.from(document.querySelectorAll('.optionino-box-option'));
     const fieldsWithRequire = Array.from(document.querySelectorAll('[data-require-0]'));
 
@@ -250,11 +235,11 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 
-    const colorFields = document.querySelectorAll('.optionino-color-selector');
-    if (colorFields.length > 0) {
-        colorFields.forEach(colorField => {
-            const colorPicker = new wp.wpColorPicker(colorField);
-            colorPicker.init();
-        });
-    }
+    jQuery(document).ready(function ($) {
+        const colorFields = $('.optionino-color-selector');
+        if (colorFields.length > 0) {
+            colorFields.wpColorPicker();
+        }
+    });
+
 });

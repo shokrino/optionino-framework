@@ -19,10 +19,26 @@ if (!class_exists('OPTNNO')) {
             add_action('wp_head', [$this,'wp_head']);
             add_action('admin_menu', [$this,'create_menu']);
             add_action( 'init', [$this,'optionino_load_textdomain'] );
+            $this->setup_defaults();
         }
         
-        public static function setup() {
+        public function setup() {
 
+        }
+        public function setup_defaults() {
+            $get_fields = self::$fields;
+            foreach ($get_fields as $dev_name => $tabs) {
+                foreach ($tabs as $tab_name => $arrays) {
+                    foreach ($arrays as $names => $field) {
+                        $field_value = optionino_get($dev_name,$field['id']);
+                        if (empty($field_value) && !empty($field['default'])) {
+                            $saved_data = get_option($dev_name, array());
+                            $saved_data[$field['id']] = $field['default'];
+                            update_option($dev_name, $saved_data);
+                        }
+                    }
+                }
+            }
         }
         public static function set_config($dev_name, $settings) {
             foreach (self::$settings as $existing_config) {
