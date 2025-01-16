@@ -280,20 +280,23 @@ if (!class_exists('OPTNNO_Builder')) {
             echo '<p>' . $desc . '</p>';
         }
 
-        public static function switcher($dev_name, $field,$currentValue,$index = "") {
+        public static function switcher($dev_name, $field, $currentValue, $index = "") {
             $title = !empty($field['title']) ? $field['title'] : '';
             $desc = !empty($field['desc']) ? $field['desc'] : '';
-            $name = !empty($field['id']) ? $field['id'].$index : '';
-            $value = ($currentValue === "on") ? true : filter_var($currentValue, FILTER_VALIDATE_BOOLEAN);
-            echo '<label class="optionino-form-label">' . $title . '</label>';
+            $name = !empty($field['id']) ? $field['id'] . $index : '';
+            $value = filter_var($currentValue, FILTER_VALIDATE_BOOLEAN);
+            $checked = $value ? 'checked' : '';
+
+            echo '<label class="optionino-form-label">' . esc_html($title) . '</label>';
             echo '<div class="optionino-switch-box flex">';
             $id = $name;
-            $checked = ($value == "on") ? 'checked' : '';
-            echo '<input type="checkbox" class="optionino-switch-checkbox optionino-radio" id="' . $id . '" name="' . $name . '" ' . $checked . '>';
-            echo '<label class="optionino-switch-label" for="' . $id . '"></label>';
+            echo '<input type="hidden" name="' . esc_attr($name) . '" value="false">';
+            echo '<input type="checkbox" class="optionino-switch-checkbox optionino-radio" id="' . esc_attr($id) . '" name="' . esc_attr($name) . '" value="true" ' . $checked . '>';
+            echo '<label class="optionino-switch-label" for="' . esc_attr($id) . '"></label>';
             echo '</div>';
-            echo '<p>' . $desc . '</p>';
+            echo '<p>' . esc_html($desc) . '</p>';
         }
+
         public static function select($dev_name, $field,$currentValue,$index = "") {
             $title = !empty($field['title']) ? $field['title'] : '';
             $desc = !empty($field['desc']) ? $field['desc'] : '';
