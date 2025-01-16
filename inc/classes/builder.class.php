@@ -186,6 +186,18 @@ if (!class_exists('OPTNNO_Builder')) {
             <p><?php echo $desc; ?></p>
             <?php
         }
+        public static function number($dev_name, $field,$currentValue,$index = "") {
+            $title = !empty($field['title']) ? $field['title'] : '';
+            $desc = !empty($field['desc']) ? $field['desc'] : '';
+            $name = !empty($field['id']) ? $field['id'].$index : '';
+            $value = !empty($currentValue) ? $currentValue : '';
+            ?>
+            <label class="optionino-form-label" for="<?php echo $name; ?>"><?php echo $title; ?></label>
+            <input type="number" class="optionino-input" id="<?php echo $name; ?>" name="<?php echo $name; ?>"
+                   value="<?php echo $value; ?>">
+            <p><?php echo $desc; ?></p>
+            <?php
+        }
         public static function textarea($dev_name, $field,$currentValue,$index = "") {
             $title = !empty($field['title']) ? $field['title'] : '';
             $desc = !empty($field['desc']) ? $field['desc'] : '';

@@ -29,6 +29,9 @@ if (!class_exists('OPTNNO_Ajax_Handler')) {
                                     $field_value_posts[$key] = $subarray_parsed;
                                 }
                                 $sanitized_value = $field_value_posts;
+                            } elseif ($field_type == "number") {
+                                $field_value = (int)sanitize_text_field($data[$field_id]);
+                                $sanitized_value = esc_html($field_value);
                             } else {
                                 $field_value = sanitize_text_field($data[$field_id]);
                                 $sanitized_value = esc_html($field_value);
