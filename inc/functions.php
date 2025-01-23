@@ -29,3 +29,7 @@ function is_id_duplicate_optionino($array, $id) {
     }
     return false;
 }
+
+function to_boolean_optionino($value) {
+    return $value === "true" ? true : false;
+}

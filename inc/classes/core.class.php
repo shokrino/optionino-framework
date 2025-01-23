@@ -152,7 +152,7 @@ if (!class_exists('OPTNNO')) {
             add_filter( 'admin_footer_text', [$this,'admin_footer_text'] );
         }
         public function admin_footer_text() {
-            _e('Powered by <a href="http://shokrino.com/" target="_blank">ShokrinoDevOptions Framework</a>',OPTNNO_TEXTDOMAIN);
+            _e('Options Page powered by <a href="https://github.com/shokrino/optionino-framework" target="_blank">Optionino Framework</a>',OPTNNO_TEXTDOMAIN);
         }
         public function optionino_load_textdomain() {
             load_plugin_textdomain( OPTNNO_TEXTDOMAIN, false,basename( OPTNNO_PATH ) . '/languages/' );

@@ -31,27 +31,29 @@ if (!class_exists('OPTNNO_Builder')) {
         }
         public static function container_start() {
             ?>
-            <script>
-            function openTabOptnno(evt, tabName) {
-                const tabcontent = document.getElementsByClassName("tabcontent");
-                for (let i = 0; i < tabcontent.length; i++) {
-                    tabcontent[i].style.display = "none";
-                }
-
-                const tablinks = document.getElementsByClassName("tablinks");
-                for (let i = 0; i < tablinks.length; i++) {
-                    tablinks[i].className = tablinks[i].className.replace(" active", "");
-                }
-
-                document.getElementById(tabName).style.display = "block";
-                evt.currentTarget.className += " active";
-            }
-            </script>
             <div id="optionino" class="optionino-container wrap">
             <?php
         }
         public static function container_end() {
-            echo '</div>';
+            ?>
+            </div>
+            <script>
+                function openTabOptnno(evt, tabName) {
+                    const tabcontent = document.getElementsByClassName("tabcontent");
+                    for (let i = 0; i < tabcontent.length; i++) {
+                        tabcontent[i].style.display = "none";
+                    }
+
+                    const tablinks = document.getElementsByClassName("tablinks");
+                    for (let i = 0; i < tablinks.length; i++) {
+                        tablinks[i].className = tablinks[i].className.replace(" active", "");
+                    }
+
+                    document.getElementById(tabName).style.display = "block";
+                    evt.currentTarget.className += " active";
+                }
+            </script>
+            <?php
         }
         public static function loading() {
             echo '<div class="loading-spinner-optionino"><svg version="1.1" id="L9" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
@@ -302,12 +304,15 @@ if (!class_exists('OPTNNO_Builder')) {
             echo '<label class="optionino-form-label">' . esc_html($title) . '</label>';
             echo '<div class="optionino-switch-box flex">';
             $id = $name;
-            echo '<input type="hidden" name="' . esc_attr($name) . '" value="false">';
+
+            echo '<input type="hidden" name="' . esc_attr($name) . "_filled" . '" value="false">';
+
             echo '<input type="checkbox" class="optionino-switch-checkbox optionino-radio" id="' . esc_attr($id) . '" name="' . esc_attr($name) . '" value="true" ' . $checked . '>';
             echo '<label class="optionino-switch-label" for="' . esc_attr($id) . '"></label>';
             echo '</div>';
             echo '<p>' . esc_html($desc) . '</p>';
         }
+
 
         public static function select($dev_name, $field,$currentValue,$index = "") {
             $title = !empty($field['title']) ? $field['title'] : '';

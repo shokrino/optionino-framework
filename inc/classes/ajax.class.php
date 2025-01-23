@@ -31,7 +31,13 @@ if (!class_exists('OPTNNO_Ajax_Handler')) {
                                 $sanitized_value = $field_value_posts;
                             } elseif ($field_type == "number") {
                                 $field_value = (int)sanitize_text_field($data[$field_id]);
-                                $sanitized_value = esc_html($field_value);
+                                $sanitized_value = $field_value;
+                            } elseif ($field_type == "switcher") {
+                                $field_value = $data[$field_id];
+                                $sanitized_value = $field_value == 'off' ? "false" : "true";
+                            } elseif ($field_type == "tinymce") {
+                                $field_value = $data[$field_id];
+                                $sanitized_value = $field_value;
                             } else {
                                 $field_value = sanitize_text_field($data[$field_id]);
                                 $sanitized_value = esc_html($field_value);
@@ -74,7 +80,7 @@ if (!class_exists('OPTNNO_Ajax_Handler')) {
                 $saved_data[$field_id] = $sanitized_value;
             }
             update_option($dev_name, $saved_data);
-//            delete_option($dev_name);
+            //delete_option($dev_name);
         }
     }
     new OPTNNO_Ajax_Handler;
