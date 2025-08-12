@@ -21,9 +21,10 @@ define('OPTNNO_CLSS', OPTNNO_PATH . 'inc/classes/');
 define('OPTNNO_TMPL', OPTNNO_PATH . 'inc/templates/');
 define('OPTNNO_ASSETS', OPTNNO_URL . 'assets/');
 
-$plugin_data = get_file_data(__FILE__, array('Version' => 'Version', 'Plugin Name' => 'Plugin Name'), false);
+$plugin_data = get_file_data(__FILE__, array('Version' => 'Version', 'Plugin Name' => 'Plugin Name', 'TextDomain' => 'Text Domain'), false);
 $current_theme = wp_get_theme()->get('Name');
 
+define('OPTNNO_TEXTDOMAIN', $plugin_data['TextDomain'] );
 define('OPTNNO_NAME', $plugin_data['Plugin Name']);
 define('OPTNNO_VERSION', $plugin_data['Version']);
 define('OPTNNO_CURRENT_THEME', $current_theme);
