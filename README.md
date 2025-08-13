@@ -9,6 +9,7 @@ Optionino is a powerful, flexible settings framework for WordPress plugins and t
 - [Usage](#usage)
 - [File-Backed Tabs](#file-backed-tabs)
 - [Field Types](#field-types)
+- [Conditionals (`require`)](#conditionals-require)
 - [Examples](#examples)
 - [Troubleshooting](#troubleshooting)
 - [License](#license)
@@ -17,10 +18,10 @@ Optionino is a powerful, flexible settings framework for WordPress plugins and t
 
 - Simple, fluent API for creating options pages and tabs. 🔧  
 - **Multi-instance safe loader**: bundle Optionino inside multiple plugins/themes without conflicts (highest version wins, constants/functions/classes are guarded). 🧩  
-- Correct **asset URLs** for enqueues (no more 404s). 🌐  
+- Correct **asset URLs** for enqueues. 🌐  
 - **File-backed tabs**: render any PHP/HTML file inside a tab. 🗂️  
 - Rich field set: `text`, `textarea`, `tinymce`, `image`, `color`, `buttonset`, `switcher`, `select`, `repeater`. 🛠️  
-- `checkCondition` for showing optional fields based on other values. ✔️  
+- **Conditional fields via `require`** for showing/hiding fields based on other values. ✔️  
 - Fully customizable options page UI in WP Admin. 🖥️
 
 ## Installation 🚀
@@ -28,7 +29,6 @@ Optionino is a powerful, flexible settings framework for WordPress plugins and t
 1. **Download** the Optionino Framework.  
 2. **Copy** the `optionino-framework` directory into your plugin/theme.  
 3. **Include** the framework in your main plugin/theme file:
-
    ```php
    // In your plugin or theme bootstrap:
    require_once __DIR__ . '/optionino-framework/optionino-framework.php';
@@ -36,8 +36,7 @@ Optionino is a powerful, flexible settings framework for WordPress plugins and t
    // Your own config file (optional, but recommended to keep things tidy)
    require_once __DIR__ . '/optionino-config.php';
    ```
-
-   > The loader is multi-instance safe. If multiple copies exist across plugins/themes, the **newest** version activates; all constants are still defined so nothing breaks.
+   > The loader is multi-instance safe. If multiple copies exist across plugins/themes, the **newest** version activates; global constants remain defined to avoid breaks.
 
 ## Usage 📝
 
@@ -46,7 +45,7 @@ Define your settings with `OPTNNO::set_config()` and your tabs with `OPTNNO::set
 - `set_config($dev_name, $settings)` registers the options page and top-level config.  
 - `set_tab($dev_name, $tab_settings)` adds tabs. Each tab can contain:
   - a `fields` array (rendered by Optionino), and/or
-  - a `file` path (Optionino will include and render that PHP/HTML file inside the tab).
+  - a `file` path (Optionino will include that PHP/HTML file inside the tab).
 
 ### Minimal Config
 
@@ -69,10 +68,9 @@ OPTNNO::set_config('custom_settings', array(
 
 ## File-Backed Tabs
 
-You can now attach a file to any tab so its content appears inside that tab. This is useful for custom reports, dashboards, help pages, or complex UIs.
+Attach a file to any tab so its content appears inside that tab. Useful for reports, dashboards, help pages, or complex UIs.
 
 ```php
-// A tab that only renders a PHP/HTML file:
 OPTNNO::set_tab('custom_settings', array(
     'id'    => 'report_tab',
     'title' => 'Report',
@@ -101,28 +99,100 @@ OPTNNO::set_tab('custom_settings', array(
 ```
 
 > **Path tips:**  
-> • Use absolute paths (e.g., `plugin_dir_path(__FILE__) . 'views/...'`).  
-> • Relative paths will be resolved against `ABSPATH`. Ensure the file exists and is readable.
+> • Use absolute paths (`plugin_dir_path(__FILE__) . 'views/...'`).  
+> • Relative paths resolve against `ABSPATH`.
 
 ## Field Types ⚙️
 
-- **Text** – Single-line input. ✏️  
-- **Textarea** – Multi-line input. 📝  
-- **TinyMCE** – Rich text editor. 🖋️  
-- **Image** – Media upload/select. 🖼️  
-- **Color** – Color picker. 🎨  
-- **Buttonset** – Labeled radio group. 🔘  
-- **Switcher** – On/Off toggle. 🔄  
-- **Select** – Dropdown. ⬇️  
-- **Repeater** – Repeatable sub-fields. ➕  
-- **checkCondition** – Conditional display:  
+- **text** – Single-line input.  
+- **textarea** – Multi-line input.  
+- **tinymce** – Rich text editor.  
+- **image** – Media upload/select.  
+- **color** – Color picker.  
+- **buttonset** – Labeled radio group.  
+- **switcher** – On/Off toggle.  
+- **select** – Dropdown.  
+- **repeater** – Repeatable sub-fields.
+
+> Every field **must have an `id`**. If a non-input field (like a note) is needed, prefer `textarea` or `text` with `desc`, still with an `id`.
+
+## Conditionals (`require`) ✅
+
+Optionino displays fields conditionally using the `require` key on a field. A `require` value is an **array of rules**, optionally with a top-level `'relation' => 'AND'|'OR'`.
+
+### Basic forms
+
+- **Equality / Inequality**
   ```php
-  'checkCondition' => array('field' => 'other_field_id', 'value' => true)
+  'require' => array(
+    array('provider', '==', 'farazsms'),
+    // or
+    array('provider', '!=', 'farazsms'),
+  )
   ```
+
+- **Membership (OR / IN)**
+  ```php
+  'require' => array(
+    array('provider', 'in', array('farazsms','maxsms','modirpayamak','panelsmspro','rangine')),
+    // Alias also seen in some configs:
+    // array('provider', 'or', array('farazsms','maxsms', ...)),
+  )
+  ```
+
+- **NOT IN**
+  ```php
+  'require' => array(
+    array('provider', 'not_in', array('legacyA','legacyB')),
+  )
+  ```
+
+- **Boolean (switcher)**
+  ```php
+  'require' => array(
+    array('enable_feature', '==', true),
+  )
+  ```
+
+- **Empty / Not Empty**
+  ```php
+  'require' => array(
+    array('api_key', 'not_empty'), // or 'empty'
+  )
+  ```
+
+- **Numeric comparisons** (for `type:number`)
+  ```php
+  'require' => array(
+    array('retry_count', '>=', 3), // also >, <, <=
+  )
+  ```
+
+### Multiple rules with relation
+
+- **AND**
+  ```php
+  'require' => array(
+    'relation' => 'AND',
+    array('captcha_provider', '==', 'turnstile'),
+    array('captcha_on_login', '==', true),
+  )
+  ```
+
+- **OR**
+  ```php
+  'require' => array(
+    'relation' => 'OR',
+    array('mode', '==', 'sandbox'),
+    array('api_key', 'empty'),
+  )
+  ```
+
+> Use field **`id` values** in rules (not labels). For `select/buttonset`, compare against the **option keys**.
 
 ## Examples 💡
 
-### Example: Helper + Tab with Fields
+### Helper + General Tab
 
 ```php
 function get_custom_options($field) {
@@ -141,97 +211,59 @@ OPTNNO::set_tab('custom_settings', array(
             'default' => 'My WordPress Site',
         ),
         array(
-            'id'      => 'site_description',
-            'type'    => 'textarea',
-            'title'   => 'Site Description',
-            'default' => 'This is my WordPress website.',
-        ),
-        array(
-            'id'      => 'editor_content',
-            'type'    => 'tinymce',
-            'title'   => 'Custom Content',
-            'default' => '<p>Welcome to my site!</p>',
-        ),
-        array(
-            'id'      => 'header_logo',
-            'type'    => 'image',
-            'title'   => 'Header Logo',
-            'default' => plugins_url('/assets/img/logo.png', __FILE__),
-        ),
-        array(
-            'id'      => 'primary_color',
-            'type'    => 'color',
-            'title'   => 'Primary Color',
-            'default' => '#3498db',
-        ),
-        array(
-            'id'      => 'layout_option',
-            'type'    => 'buttonset',
-            'title'   => 'Layout Type',
-            'options' => array(
-                'boxed'     => 'Boxed',
-                'fullwidth' => 'Full Width',
-            ),
-            'default' => 'boxed',
-        ),
-        array(
             'id'      => 'enable_custom_style',
             'type'    => 'switcher',
             'title'   => 'Enable Custom Styles',
             'default' => true,
         ),
         array(
-            'id'      => 'footer_style',
+            'id'      => 'style_provider',
             'type'    => 'select',
-            'title'   => 'Footer Style',
+            'title'   => 'Style Provider',
             'options' => array(
-                'simple'   => 'Simple',
-                'extended' => 'Extended',
+                'classic' => 'Classic',
+                'modern'  => 'Modern',
             ),
-            'default' => 'simple',
-        ),
-        array(
-            'id'      => 'social_links',
-            'type'    => 'repeater',
-            'title'   => 'Social Media Links',
-            'fields'  => array(
-                array(
-                    'id'    => 'social_platform',
-                    'type'  => 'text',
-                    'title' => 'Platform',
-                ),
-                array(
-                    'id'    => 'social_url',
-                    'type'  => 'text',
-                    'title' => 'URL',
-                ),
+            'default' => 'classic',
+            'require' => array(
+                array('enable_custom_style', '==', true),
             ),
         ),
         array(
-            'id'      => 'show_extra_options',
-            'type'    => 'switcher',
-            'title'   => 'Show Extra Options',
-            'default' => false,
-        ),
-        array(
-            'id'      => 'extra_setting',
+            'id'      => 'advanced_color',
             'type'    => 'color',
-            'title'   => 'Extra Setting Color',
+            'title'   => 'Advanced Accent',
             'default' => '#ff5733',
-            'checkCondition' => array(
-                'field' => 'show_extra_options',
-                'value' => true,
+            'require' => array(
+                'relation' => 'AND',
+                array('enable_custom_style', '==', true),
+                array('style_provider', 'in', array('modern')),
             ),
         ),
     ),
 ));
 ```
 
+### Real-world conditional (like your SMS example)
+
+```php
+array(
+  'id'      => 'sms_credentials',
+  'type'    => 'textarea',
+  'title'   => 'SMS Credentials (JSON)',
+  'desc'    => 'Provide credentials for the selected provider.',
+  'require' => array(
+    array('sms_provider', 'in', array('farazsms','maxsms','modirpayamak','panelsmspro','rangine')),
+  ),
+),
+```
+
 ## Troubleshooting 🛠️
 
-- **404 on CSS/JS:** The loader defines `OPTNNO_ASSETS` as a **URL** based on `plugins_url()`. Make sure you included the framework via its actual location, and clear the browser cache (hard refresh).  
-- **Undefined constants (e.g., `OPTNNO_TMPL`):** The loader defines all constants before it decides to skip loading files. If you’re including Optionino from multiple places, ensure **only one copy** is actively loaded — the new loader will keep the highest version active and still define constants globally.  
-- **Textdomain/Translations:** The framework loads textdomain from `OPTNNO_LANG`. If your structure is non-standard, consider manually calling `load_textdomain()` with the absolute path to your `.mo` file.
+- **Undefined array key "id" warnings:** Ensure **every field has an `id`** (even “note”-like fields).  
+- **Condition not working:** Double-check the controlling field’s **`id`** and compare to its **value** (option key), not label. For booleans (`switcher`), use `true/false`.  
+- **Assets 404:** Confirm the loader path and URLs. Clear caches / hard refresh.  
+- **Multiple copies:** The highest framework version should win; avoid double-including loaders manually.
 
 ## License 📄
 
