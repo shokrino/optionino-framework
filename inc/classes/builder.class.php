@@ -144,10 +144,24 @@ class OPTNNO_Builder {
                 foreach ($tabsArray[$dev_name] as $tab) { ?>
                     <div id="<?php echo $tab['id']; ?>" class="tabcontent">
                         <?php
-                        $fields = $tab['fields'];
-                        if (isset($fields) && is_array($fields)) {
+                        if ( ! empty( $tab['file'] ) && is_string( $tab['file'] ) ) {
+                            $path = $tab['file'];
+
+                            if ( strpos($path, '://') === false && ! preg_match('#^([a-zA-Z]:[\\\\/]|/)#', $path) ) {
+                                $path = ABSPATH . ltrim($path, '/\\');
+                            }
+
+                            if ( file_exists( $path ) && is_readable( $path ) ) {
+                                include $path;
+                            } else {
+                                echo '<div class="notice notice-error"><p>' . esc_html__('Assigned file not found or not readable.', OPTNNO_TEXTDOMAIN) . '</p></div>';
+                            }
+                        }
+
+                        $fields = isset($tab['fields']) && is_array($tab['fields']) ? $tab['fields'] : array();
+                        if (!empty($fields)) {
                             foreach ($fields as $field) {
-                                OPTNNO_Builder::field_option($dev_name,$field);
+                                OPTNNO_Builder::field_option($dev_name, $field);
                             }
                         }
                         ?>
@@ -156,6 +170,7 @@ class OPTNNO_Builder {
                 }
             }
         }
+
         public static function field_option($dev_name, $field, $repeater = false, $index = 0, $currentValue = "") {
             ?>
             <div id="container-<?php echo $field['id'] . "-" . $index; ?>" class="optionino-box-option optionino-conditional-option"
