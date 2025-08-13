@@ -6,8 +6,8 @@
  * @since 1.0.0
  *
  */
-if (!class_exists('OPTNNO_Builder')) {
-    class OPTNNO_Builder {
+if (!class_exists('OPTNNO_Builder', false)) {
+class OPTNNO_Builder {
         public function __construct() {}
         public static function logo($dev_name) {
             $settingsArray = OPTNNO::$settings;
@@ -387,4 +387,5 @@ if (!class_exists('OPTNNO_Builder')) {
             }
         }
     }
+}
 }

@@ -6,8 +6,8 @@
  * @since 1.0.0
  *
  */
-if (!class_exists('OPTNNO')) {
-    class OPTNNO {
+if (!class_exists('OPTNNO', false)) {
+class OPTNNO {
         public static $settings = array();
         public static $tabs = array();
         public static $fields = array();
@@ -148,7 +148,7 @@ if (!class_exists('OPTNNO')) {
             }
         }
         public function page_content($settings) {
-            require_once OPTNNO_TMPL.'setting-page.php';
+            require_once ( defined('OPTNNO_TMPL') ? OPTNNO_TMPL : ( defined('OPTNNO_INC') ? OPTNNO_INC . 'templates/' : __DIR__ . '/../templates/' ) ) . 'setting-page.php';
             add_filter( 'admin_footer_text', [$this,'admin_footer_text'] );
         }
         public function admin_footer_text() {

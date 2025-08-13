@@ -6,8 +6,8 @@
  * @since 1.0.0
  *
  */
-if (!class_exists('OPTNNO_Ajax_Handler')) {
-    class OPTNNO_Ajax_Handler {
+if (!class_exists('OPTNNO_Ajax_Handler', false)) {
+class OPTNNO_Ajax_Handler {
         public function __construct() {
             add_action('wp_ajax_save_optionino_data', [$this, 'save_optionino_data']);
             add_action('wp_ajax_nopriv_save_optionino_data', [$this, 'save_optionino_data']);

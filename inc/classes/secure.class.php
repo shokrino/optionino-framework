@@ -6,8 +6,8 @@
  * @since 1.0.0
  *
  */
-if (!class_exists('OPTNNO_Secure')) {
-    class OPTNNO_Secure {
+if (!class_exists('OPTNNO_Secure', false)) {
+class OPTNNO_Secure {
         private $secretKey;
 
         public function __construct() {

@@ -14,26 +14,9 @@ defined( 'ABSPATH' ) || exit;
  * @copyright 2024 Shokrino
  */
 
-define('OPTNNO_PATH', plugin_dir_path(__FILE__));
-define('OPTNNO_URL', plugin_dir_url(__FILE__));
-define('OPTNNO_INC', OPTNNO_PATH . 'inc/');
-define('OPTNNO_CLSS', OPTNNO_PATH . 'inc/classes/');
-define('OPTNNO_TMPL', OPTNNO_PATH . 'inc/templates/');
-define('OPTNNO_ASSETS', OPTNNO_URL . 'assets/');
+require_once __DIR__ . '/inc/loader.php';
 
-$plugin_data = get_file_data(__FILE__, array('Version' => 'Version', 'Plugin Name' => 'Plugin Name', 'TextDomain' => 'Text Domain'), false);
-$current_theme = wp_get_theme()->get('Name');
-
-define('OPTNNO_TEXTDOMAIN', $plugin_data['TextDomain'] );
-define('OPTNNO_NAME', $plugin_data['Plugin Name']);
-define('OPTNNO_VERSION', $plugin_data['Version']);
-define('OPTNNO_CURRENT_THEME', $current_theme);
-define('OPTNNO_CURRENT_PHP', PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION);
-
-include_once OPTNNO_INC . 'functions.php';
-include_once OPTNNO_CLSS . 'secure.class.php';
-include_once OPTNNO_CLSS . 'builder.class.php';
-include_once OPTNNO_CLSS . 'ajax.class.php';
-include_once OPTNNO_CLSS . 'core.class.php';
-
-include_once 'config.php';
+$__opt_cfg = __DIR__ . '/config.php';
+if ( file_exists( $__opt_cfg ) ) {
+    include_once $__opt_cfg;
+}
