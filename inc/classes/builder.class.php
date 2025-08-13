@@ -285,7 +285,7 @@ class OPTNNO_Builder {
             $value = !empty($current_value) ? $current_value : '';
             ?>
             <label class="optionino-form-label" for="<?php echo $name; ?>"><?php echo $title; ?></label>
-            <input type="color" class="optionino-color-selector" id="<?php echo $name; ?>" name="<?php echo $name; ?>" value="<?php echo $value; ?>">
+            <input type="text" class="optionino-color-selector" placeholder="#RRGGBB" pattern="^#?[0-9A-Fa-f]{3,8}$" name="<?php echo esc_attr($name); ?>" value="<?php echo esc_attr($value); ?>">
             <p><?php echo $desc; ?></p>
             <?php
         }
