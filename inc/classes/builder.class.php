@@ -11,12 +11,6 @@ class OPTNNO_Builder {
         public function __construct() {}
         public static function logo($dev_name) {
             $settingsArray = OPTNNO::$settings;
-            foreach ($settingsArray as $dev_name => $settings) {
-                $option = get_option($dev_name,NULL);
-                if (is_null($option) or empty($option) or $option == []) {
-                    OPTNNO_Ajax_Handler::defaults($dev_name);
-                }
-            }
             $settings = $settingsArray[$dev_name];
             if (isset($settings)) {
                 $logo_url = $settings["logo_url"];
@@ -77,7 +71,7 @@ class OPTNNO_Builder {
         public static function form_end($dev_name) {
             echo '<input type="hidden" name="dev_name" value="'.$dev_name.'">
                    <div class="optionino-options-save-box">
-                <button type="submit" class="submit-optionino" name="save-optionino">'.__('save changes', OPTNNO_TEXTDOMAIN).'</button>
+                <button type="submit" class="submit-optionino" name="save-optionino">'.__('ذخیره تغییرات', OPTNNO_TEXTDOMAIN).'</button>
             </div>
             </form>';
         }

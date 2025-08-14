@@ -130,7 +130,7 @@ if ( ! class_exists( 'OPTNNO_Ajax_Handler', false ) ) {
 
             self::save_data( $dev_name, $data_to_save );
 
-            wp_send_json_success( array( 'message' => __( 'Data saved successfully!', OPTNNO_TEXTDOMAIN ) ) );
+            wp_send_json_success( array( 'message' => __( 'تنظیمات با موفقیت ذخیره شد!', OPTNNO_TEXTDOMAIN ) ) );
         }
 
         /**
