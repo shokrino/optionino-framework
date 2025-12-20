@@ -11,17 +11,14 @@ class OPTNNO_Builder {
         public function __construct() {}
         public static function logo($dev_name) {
             $settingsArray = OPTNNO::$settings;
-            $settings = $settingsArray[$dev_name];
-            if (isset($settings)) {
-                $logo_url = $settings["logo_url"];
-                if (!empty($logo_url)) {
-                    return $logo_url;
-                }
+            $settings = isset($settingsArray[$dev_name]) ? $settingsArray[$dev_name] : array();
+            if (isset($settings['logo_url']) && !empty($settings['logo_url'])) {
+                return esc_url($settings['logo_url']);
             }
-            return OPTNNO_ASSETS . 'img/logo.png';
+            return esc_url(OPTNNO_ASSETS . 'img/logo.png');
         }
         public static function title($title) {
-            echo '<h1 class="optionino-header-title wp-heading-inline">'.$title.'</h1>';
+            echo '<h1 class="optionino-header-title wp-heading-inline">'.esc_html($title).'</h1>';
         }
         public static function container_start() {
             ?>
@@ -69,9 +66,9 @@ class OPTNNO_Builder {
             echo '<div class="success-text"></div><div class="error-text"></div>';
         }
         public static function form_end($dev_name) {
-            echo '<input type="hidden" name="dev_name" value="'.$dev_name.'">
+            echo '<input type="hidden" name="dev_name" value="'.esc_attr($dev_name).'">
                    <div class="optionino-options-save-box">
-                <button type="submit" class="submit-optionino" name="save-optionino">'.__('ذخیره تغییرات', OPTNNO_TEXTDOMAIN).'</button>
+                <button type="submit" class="submit-optionino" name="save-optionino">'.esc_html__('save changes', OPTNNO_TEXTDOMAIN).'</button>
             </div>
             </form>';
         }
@@ -79,7 +76,7 @@ class OPTNNO_Builder {
             if (is_rtl()) {
                 $class = $class.' rtl';
             }
-            echo '<div class="optionino-section flex section-options-'.$class.'">';
+            echo '<div class="optionino-section flex section-options-'.esc_attr($class).'">';
         }
         public static function section_end() {
             echo '</div>';
@@ -87,8 +84,8 @@ class OPTNNO_Builder {
         public static function tab_start($dev_name,$version) {
             echo '<div class="tab">
             <div class="tab-information flex-center">
-                <img src="'.self::logo($dev_name).'">
-                <span>'.__('Version: ', OPTNNO_TEXTDOMAIN).'<strong>'.$version.'</strong></span>
+                <img src="'.esc_url(self::logo($dev_name)).'" alt="'.esc_attr__('Logo', OPTNNO_TEXTDOMAIN).'">
+                <span>'.esc_html__('Version: ', OPTNNO_TEXTDOMAIN).'<strong>'.esc_html($version).'</strong></span>
             </div>';
         }
         public static function tab_end() {
@@ -99,18 +96,23 @@ class OPTNNO_Builder {
             if (isset($tabsArray[$dev_name]) && is_array($tabsArray[$dev_name])) {
                 foreach ($tabsArray[$dev_name] as $tab) {
                     ?>
-                    <button class="tablinks flex" onclick="openTabOptnno(event, '<?php echo $tab['id']; ?>')">
+                    <button class="tablinks flex" onclick="openTabOptnno(event, '<?php echo esc_js($tab['id']); ?>')">
                         <div class="optionino-tab-titles-box">
                             <div class="optionino-title-tab-options">
-                                <?php echo $tab['title']; ?>
+                                <?php echo esc_html($tab['title']); ?>
                             </div>
                             <div class="optionino-desc-tab-options">
-                                <?php echo $tab['desc']; ?>
+                                <?php echo esc_html($tab['desc']); ?>
                             </div>
                         </div>
                         <?php
                         if (!empty($tab['svg_logo'])) {
-                            echo $tab['svg_logo'];
+                            echo wp_kses( $tab['svg_logo'], array(
+                                'svg' => array('xmlns' => true, 'class' => true, 'width' => true, 'height' => true, 'viewBox' => true, 'stroke-width' => true, 'stroke' => true, 'fill' => true, 'stroke-linecap' => true, 'stroke-linejoin' => true),
+                                'path' => array('stroke' => true, 'd' => true, 'fill' => true),
+                                'circle' => array('cx' => true, 'cy' => true, 'r' => true),
+                                'line' => array('x1' => true, 'y1' => true, 'x2' => true, 'y2' => true),
+                            ) );
                         } else {
                             echo '<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-adjustments-horizontal" width="30"
                                  height="30" viewBox="0 0 24 24" stroke-width="1.5" stroke="#e2e2e2" fill="none" stroke-linecap="round"
@@ -136,7 +138,7 @@ class OPTNNO_Builder {
             $tabsArray = OPTNNO::$tabs;
             if (isset($tabsArray[$dev_name]) && is_array($tabsArray[$dev_name])) {
                 foreach ($tabsArray[$dev_name] as $tab) { ?>
-                    <div id="<?php echo $tab['id']; ?>" class="tabcontent">
+                    <div id="<?php echo esc_attr($tab['id']); ?>" class="tabcontent">
                         <?php
                         if ( ! empty( $tab['file'] ) && is_string( $tab['file'] ) ) {
                             $path = $tab['file'];
@@ -167,16 +169,16 @@ class OPTNNO_Builder {
 
         public static function field_option($dev_name, $field, $repeater = false, $index = 0, $currentValue = "") {
             ?>
-            <div id="container-<?php echo $field['id'] . "-" . $index; ?>" class="optionino-box-option optionino-conditional-option"
-                 display="true" <?php if ($repeater) { echo 'repeater-name="' . $field["id"] . '"'; } ?>
+            <div id="container-<?php echo esc_attr($field['id'] . "-" . $index); ?>" class="optionino-box-option optionino-conditional-option"
+                 display="true" <?php if ($repeater) { echo 'repeater-name="' . esc_attr($field["id"]) . '"'; } ?>
                 <?php if (isset($field['require']) && is_array($field['require'])) { // Check if 'require' exists and is an array ?>
                     <?php foreach ($field['require'] as $reqIndex => $require) { ?>
-                        data-require-<?php echo $reqIndex; ?>='<?php echo json_encode($require, JSON_UNESCAPED_UNICODE); ?>'
+                        data-require-<?php echo esc_attr($reqIndex); ?>='<?php echo esc_attr(json_encode($require, JSON_UNESCAPED_UNICODE)); ?>'
                     <?php } ?>
                 <?php } ?>>
                 <?php
-                $type = $field['type'];
-                $currentValue = !empty($currentValue) && $repeater ? $currentValue : optionino_get($dev_name, $field['id']);
+                $type = isset($field['type']) ? $field['type'] : 'text';
+                $currentValue = $repeater ? $currentValue : optionino_get($dev_name, $field['id']);
                 if (method_exists(__CLASS__, $type)) {
                     $index_repeater = $repeater ? "_" . $index : "";
                     self::$type($dev_name, $field, $currentValue, $index_repeater);
@@ -191,10 +193,10 @@ class OPTNNO_Builder {
             $name = !empty($field['id']) ? $field['id'].$index : '';
             $value = !empty($currentValue) ? $currentValue : '';
             ?>
-            <label class="optionino-form-label" for="<?php echo $name; ?>"><?php echo $title; ?></label>
-            <input type="text" class="optionino-input" id="<?php echo $name; ?>" name="<?php echo $name; ?>"
-                   value="<?php echo $value; ?>">
-            <p><?php echo $desc; ?></p>
+            <label class="optionino-form-label" for="<?php echo esc_attr($name); ?>"><?php echo esc_html($title); ?></label>
+            <input type="text" class="optionino-input" id="<?php echo esc_attr($name); ?>" name="<?php echo esc_attr($name); ?>"
+                   value="<?php echo esc_attr($value); ?>">
+            <p><?php echo esc_html($desc); ?></p>
             <?php
         }
         public static function number($dev_name, $field,$currentValue,$index = "") {
@@ -203,10 +205,10 @@ class OPTNNO_Builder {
             $name = !empty($field['id']) ? $field['id'].$index : '';
             $value = !empty($currentValue) ? $currentValue : '';
             ?>
-            <label class="optionino-form-label" for="<?php echo $name; ?>"><?php echo $title; ?></label>
-            <input type="number" class="optionino-input" id="<?php echo $name; ?>" name="<?php echo $name; ?>"
-                   value="<?php echo $value; ?>">
-            <p><?php echo $desc; ?></p>
+            <label class="optionino-form-label" for="<?php echo esc_attr($name); ?>"><?php echo esc_html($title); ?></label>
+            <input type="number" class="optionino-input" id="<?php echo esc_attr($name); ?>" name="<?php echo esc_attr($name); ?>"
+                   value="<?php echo esc_attr($value); ?>">
+            <p><?php echo esc_html($desc); ?></p>
             <?php
         }
         public static function textarea($dev_name, $field,$currentValue,$index = "") {
@@ -215,11 +217,9 @@ class OPTNNO_Builder {
             $name = !empty($field['id']) ? $field['id'].$index : '';
             $value = !empty($currentValue) ? $currentValue : '';
             ?>
-            <label class="optionino-form-label" for="<?php echo $name; ?>"><?php echo $title; ?></label>
-            <textarea class="optionino-input" id="<?php echo $name; ?>" name="<?php echo $name; ?>">
-                <?php echo $value; ?>
-            </textarea>
-            <p><?php echo $desc; ?></p>
+            <label class="optionino-form-label" for="<?php echo esc_attr($name); ?>"><?php echo esc_html($title); ?></label>
+            <textarea class="optionino-input" id="<?php echo esc_attr($name); ?>" name="<?php echo esc_attr($name); ?>"><?php echo esc_textarea($value); ?></textarea>
+            <p><?php echo esc_html($desc); ?></p>
             <?php
         }
         public static function tinymce($dev_name, $field,$currentValue,$index = "") {
@@ -228,9 +228,9 @@ class OPTNNO_Builder {
             $name = !empty($field['id']) ? $field['id'].$index : '';
             $value = !empty($currentValue) ? $currentValue : '';
             ?>
-            <label class="optionino-form-label" for="<?php echo $name; ?>"><?php echo $title; ?></label>
-            <textarea id="<?php echo $name; ?>" name="<?php echo $name; ?>" class="optionino-input"><?php echo $value; ?></textarea>
-            <p><?php echo $desc; ?></p>
+            <label class="optionino-form-label" for="<?php echo esc_attr($name); ?>"><?php echo esc_html($title); ?></label>
+            <textarea id="<?php echo esc_attr($name); ?>" name="<?php echo esc_attr($name); ?>" class="optionino-input"><?php echo esc_textarea($value); ?></textarea>
+            <p><?php echo esc_html($desc); ?></p>
             <?php wp_enqueue_editor(); ?>
             <script>
                 jQuery(document).ready(function($){
@@ -260,13 +260,13 @@ class OPTNNO_Builder {
             $name = !empty($field['id']) ? $field['id'] . $index : '';
             $value = !empty($currentValue) ? $currentValue : '';
             ?>
-            <label class="optionino-form-label" for="<?php echo $name; ?>"><?php echo $title; ?></label>
+            <label class="optionino-form-label" for="<?php echo esc_attr($name); ?>"><?php echo esc_html($title); ?></label>
             <div class="optionino-box-image-field">
                 <div class="inner-image-box-optionino">
-                    <input type="text" class="optionino-input image-url" id="<?php echo $name; ?>" name="<?php echo $name; ?>"
-                           value="<?php echo $value; ?>">
-                    <input type="button" class="optionino-button upload-image-button" data-image-field="<?php echo $name; ?>" value="آپلود تصویر">
-                    <p><?php echo $desc; ?></p>
+                    <input type="text" class="optionino-input image-url" id="<?php echo esc_attr($name); ?>" name="<?php echo esc_attr($name); ?>"
+                           value="<?php echo esc_attr($value); ?>">
+                    <input type="button" class="optionino-button upload-image-button" data-image-field="<?php echo esc_attr($name); ?>" value="<?php echo esc_attr__('Upload Image', OPTNNO_TEXTDOMAIN); ?>">
+                    <p><?php echo esc_html($desc); ?></p>
                 </div>
                 <img id="<?php echo $name; ?>-preview" class="uploaded-image optionino-image-preview" src="<?php echo esc_url($value); ?>" style="max-width: 100%;">
             </div>
@@ -278,9 +278,9 @@ class OPTNNO_Builder {
             $name = !empty($field['id']) ? $field['id'] . $index : '';
             $value = !empty($current_value) ? $current_value : '';
             ?>
-            <label class="optionino-form-label" for="<?php echo $name; ?>"><?php echo $title; ?></label>
-            <input type="text" class="optionino-color-selector" placeholder="#RRGGBB" pattern="^#?[0-9A-Fa-f]{3,8}$" name="<?php echo esc_attr($name); ?>" value="<?php echo esc_attr($value); ?>">
-            <p><?php echo $desc; ?></p>
+            <label class="optionino-form-label" for="<?php echo esc_attr($name); ?>"><?php echo esc_html($title); ?></label>
+            <input type="text" class="optionino-color-selector" id="<?php echo esc_attr($name); ?>" placeholder="#RRGGBB" pattern="^#?[0-9A-Fa-f]{3,8}$" name="<?php echo esc_attr($name); ?>" value="<?php echo esc_attr($value); ?>">
+            <p><?php echo esc_html($desc); ?></p>
             <?php
         }
         public static function buttonset($dev_name, $field,$currentValue,$index = "") {
@@ -289,18 +289,18 @@ class OPTNNO_Builder {
             $name = !empty($field['id']) ? $field['id'].$index : '';
             $options = !empty($field['options']) && is_array($field['options']) ? $field['options'] : array();
             $value = !empty($currentValue) ? $currentValue : '';
-            echo '<label class="optionino-form-label">' . $title . '</label>';
+            echo '<label class="optionino-form-label">' . esc_html($title) . '</label>';
             echo '<div class="optionino-button-set-box flex">';
 
             foreach ($options as $key => $label) {
-                $id = $name . '_' . $key;
+                $id = esc_attr($name . '_' . $key);
                 $checked = ($key == $value) ? 'checked' : '';
-                echo '<input type="radio" class="optionino-radio button-set" id="' . $id . '" name="' . $name . '" value="' . esc_attr($key) . '" ' . $checked . '>';
+                echo '<input type="radio" class="optionino-radio button-set" id="' . $id . '" name="' . esc_attr($name) . '" value="' . esc_attr($key) . '" ' . $checked . '>';
                 echo '<label class="optionino-button-label flex" for="'.$id.'">' . esc_html($label) . '</label>';
             }
 
             echo '</div>';
-            echo '<p>' . $desc . '</p>';
+            echo '<p>' . esc_html($desc) . '</p>';
         }
 
         public static function switcher($dev_name, $field, $currentValue, $index = "") {
@@ -328,8 +328,8 @@ class OPTNNO_Builder {
             $desc = !empty($field['desc']) ? $field['desc'] : '';
             $name = !empty($field['id']) ? $field['id'].$index : '';
             $options = !empty($field['options']) && is_array($field['options']) ? $field['options'] : array();
-            echo '<label class="optionino-form-label" for="' . $name . '">' . $title . '</label>';
-            echo '<select class="optionino-select" id="' . $name . '" name="' . $name . '">';
+            echo '<label class="optionino-form-label" for="' . esc_attr($name) . '">' . esc_html($title) . '</label>';
+            echo '<select class="optionino-select" id="' . esc_attr($name) . '" name="' . esc_attr($name) . '">';
 
             foreach ($options as $key => $label) {
                 $selected = ($currentValue == $key) ? 'selected' : '';
@@ -337,24 +337,24 @@ class OPTNNO_Builder {
             }
 
             echo '</select>';
-            echo '<p>' . $desc . '</p>';
+            echo '<p>' . esc_html($desc) . '</p>';
         }
         public static function repeater($dev_name, $field,$currentValue,$index = "") {
             $title = !empty($field['title']) ? $field['title'] : '';
             $desc = !empty($field['desc']) ? $field['desc'] : '';
             $name = !empty($field['id']) ? $field['id'].$index : '';
             $fields = !empty($field['fields']) && is_array($field['fields']) ? $field['fields'] : array();
-            echo '<div class="optionino-repeater-field" data-repeater-name="' . $name . '">';
-            echo '<label class="optionino-form-label">' . $title . '</label>';
+            echo '<div class="optionino-repeater-field" data-repeater-name="' . esc_attr($name) . '">';
+            echo '<label class="optionino-form-label">' . esc_html($title) . '</label>';
             echo '<div class="optionino-repeater-container">';
-            if (empty($currentValue)) {
+            if (empty($currentValue) || !is_array($currentValue)) {
                 $currentValue = [array_fill_keys(array_column($fields, 'id'), '')];
             }
             foreach ($currentValue as $index => $item) {
-                echo '<div class="optionino-repeater-item" data-item-index="' . $index . '">';
+                echo '<div class="optionino-repeater-item" data-item-index="' . esc_attr($index) . '">';
                 echo '<div class="optionino-repeater-seperate-subfields">';
                 foreach ($fields as $subfield) {
-                    $fieldValue = $item[$subfield['id']];
+                    $fieldValue = isset($item[$subfield['id']]) ? $item[$subfield['id']] : '';
                     self::field_option($dev_name, $subfield, true, $index ,$fieldValue);
                 }
                 echo '</div>';
@@ -365,7 +365,7 @@ class OPTNNO_Builder {
                   <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
                   <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
                   <path d="M10 12l4 4m0 -4l-4 4" />
-                </svg>حذف </button>';
+                </svg>' . __('Delete', OPTNNO_TEXTDOMAIN) . ' </button>';
                 echo '</div>';
                 echo '</div>';
             }
@@ -378,7 +378,7 @@ class OPTNNO_Builder {
                 </svg>
                 </button>';
             echo '</div>';
-            echo '<p>' . $desc . '</p>';
+            echo '<p>' . esc_html($desc) . '</p>';
         }
 
         public static function checkCondition($value, $operator, $requiredValue) {

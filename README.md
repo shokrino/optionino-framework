@@ -1,270 +1,511 @@
-# Optionino Framework (OPTNNO) 🎛️
+# Optionino Framework
 
-Optionino is a powerful, flexible settings framework for WordPress plugins and themes. It gives you a clean API to create admin pages, tabs, and fields — plus handy extras like conditional fields and repeaters. 🌟
+**A Simple, Secure, and Powerful Settings Framework for WordPress**
 
-## Table of Contents 📚
+Build professional admin settings pages for your WordPress plugins and themes in minutes. No complicated setup, just copy and use.
 
-- [Features](#features)
-- [Installation](#installation)
-- [Usage](#usage)
-- [File-Backed Tabs](#file-backed-tabs)
-- [Field Types](#field-types)
-- [Conditionals (`require`)](#conditionals-require)
-- [Examples](#examples)
-- [Troubleshooting](#troubleshooting)
-- [License](#license)
+---
 
-## Features ✨
+## 🎯 Why Optionino?
 
-- Simple, fluent API for creating options pages and tabs. 🔧  
-- **Multi-instance safe loader**: bundle Optionino inside multiple plugins/themes without conflicts (highest version wins, constants/functions/classes are guarded). 🧩  
-- Correct **asset URLs** for enqueues. 🌐  
-- **File-backed tabs**: render any PHP/HTML file inside a tab. 🗂️  
-- Rich field set: `text`, `textarea`, `tinymce`, `image`, `color`, `buttonset`, `switcher`, `select`, `repeater`. 🛠️  
-- **Conditional fields via `require`** for showing/hiding fields based on other values. ✔️  
-- Fully customizable options page UI in WP Admin. 🖥️
+✅ **Super Simple** - Create settings pages with just a few lines of code  
+✅ **100% Secure** - Built-in XSS and CSRF protection  
+✅ **Rich Fields** - Text, color, image, editor, repeater, and more  
+✅ **Multi-Plugin Safe** - Use in multiple plugins without conflicts  
+✅ **Smart Loader** - Automatically uses the latest version  
+✅ **Translation Ready** - Fully localized and i18n compatible  
 
-## Installation 🚀
+---
 
-1. **Download** the Optionino Framework.  
-2. **Copy** the `optionino-framework` directory into your plugin/theme.  
-3. **Include** the framework in your main plugin/theme file:
-   ```php
-   // In your plugin or theme bootstrap:
-   require_once __DIR__ . '/optionino-framework/optionino-framework.php';
+## 🚀 Quick Start (5 Minutes)
 
-   // Your own config file (optional, but recommended to keep things tidy)
-   require_once __DIR__ . '/optionino-config.php';
-   ```
-   > The loader is multi-instance safe. If multiple copies exist across plugins/themes, the **newest** version activates; global constants remain defined to avoid breaks.
-
-## Usage 📝
-
-Define your settings with `OPTNNO::set_config()` and your tabs with `OPTNNO::set_tab()`.
-
-- `set_config($dev_name, $settings)` registers the options page and top-level config.  
-- `set_tab($dev_name, $tab_settings)` adds tabs. Each tab can contain:
-  - a `fields` array (rendered by Optionino), and/or
-  - a `file` path (Optionino will include that PHP/HTML file inside the tab).
-
-### Minimal Config
-
-```php
-OPTNNO::set_config('custom_settings', array(
-    'dev_title'      => 'Custom Plugin Settings',
-    'dev_version'    => '1.0.0',
-    'logo_url'       => plugins_url('/assets/img/plugin-logo.png', __FILE__),
-    'dev_textdomain' => 'my_plugin_textdomain',
-    'menu_type'      => 'menu', // or 'submenu'
-    'menu_title'     => 'Plugin Settings',
-    'page_title'     => 'Plugin Options',
-    'page_capability'=> 'manage_options',
-    'page_slug'      => 'custom_settings_options',
-    'icon_url'       => plugins_url('/assets/img/icon.png', __FILE__),
-    'menu_priority'  => 60,
-    'admin_bar'      => false,
-));
+### Step 1: Copy Files
+Copy the `optionino-framework` folder into your plugin or theme:
+```
+your-plugin/
+  ├── inc/
+  │   └── optionino-framework/  ← Here
+  └── your-plugin.php
 ```
 
-## File-Backed Tabs
-
-Attach a file to any tab so its content appears inside that tab. Useful for reports, dashboards, help pages, or complex UIs.
+### Step 2: Load Framework
+Add this to your main plugin file:
 
 ```php
-OPTNNO::set_tab('custom_settings', array(
-    'id'    => 'report_tab',
-    'title' => 'Report',
-    'icon'  => 'dashicons-media-document',
-    'file'  => plugin_dir_path(__FILE__) . 'views/report-tab.php', // absolute path is safest
-));
+<?php
+// Load Optionino Framework
+require_once plugin_dir_path( __FILE__ ) . 'inc/optionino-framework/optionino-framework.php';
 ```
 
-You can also **combine** a file with fields; the file is rendered first, then fields:
+### Step 3: Create Your First Settings Page
+Create a new file for settings (e.g., `inc/admin/settings.php`):
 
 ```php
-OPTNNO::set_tab('custom_settings', array(
-    'id'    => 'advanced_tab',
-    'title' => 'Advanced',
-    'icon'  => 'dashicons-admin-tools',
-    'file'  => plugin_dir_path(__FILE__) . 'views/advanced-top.php',
-    'fields'=> array(
-        array(
-            'id'      => 'enable_foo',
-            'type'    => 'switcher',
-            'title'   => 'Enable Foo',
-            'default' => false,
-        ),
-    ),
+<?php
+// Configure the settings page
+OPTNNO::set_config('my_plugin_settings', array(
+    'menu_title'      => 'My Settings',
+    'page_title'      => 'Plugin Settings',
+    'menu_type'       => 'menu',
+    'page_slug'       => 'my-plugin-settings',
+    'icon_url'        => 'dashicons-admin-generic',
 ));
-```
 
-> **Path tips:**  
-> • Use absolute paths (`plugin_dir_path(__FILE__) . 'views/...'`).  
-> • Relative paths resolve against `ABSPATH`.
-
-## Field Types ⚙️
-
-- **text** – Single-line input.  
-- **textarea** – Multi-line input.  
-- **tinymce** – Rich text editor.  
-- **image** – Media upload/select.  
-- **color** – Color picker.  
-- **buttonset** – Labeled radio group.  
-- **switcher** – On/Off toggle.  
-- **select** – Dropdown.  
-- **repeater** – Repeatable sub-fields.
-
-> Every field **must have an `id`**. If a non-input field (like a note) is needed, prefer `textarea` or `text` with `desc`, still with an `id`.
-
-## Conditionals (`require`) ✅
-
-Optionino displays fields conditionally using the `require` key on a field. A `require` value is an **array of rules**, optionally with a top-level `'relation' => 'AND'|'OR'`.
-
-### Basic forms
-
-- **Equality / Inequality**
-  ```php
-  'require' => array(
-    array('provider', '==', 'farazsms'),
-    // or
-    array('provider', '!=', 'farazsms'),
-  )
-  ```
-
-- **Membership (OR / IN)**
-  ```php
-  'require' => array(
-    array('provider', 'in', array('farazsms','maxsms','modirpayamak','panelsmspro','rangine')),
-    // Alias also seen in some configs:
-    // array('provider', 'or', array('farazsms','maxsms', ...)),
-  )
-  ```
-
-- **NOT IN**
-  ```php
-  'require' => array(
-    array('provider', 'not_in', array('legacyA','legacyB')),
-  )
-  ```
-
-- **Boolean (switcher)**
-  ```php
-  'require' => array(
-    array('enable_feature', '==', true),
-  )
-  ```
-
-- **Empty / Not Empty**
-  ```php
-  'require' => array(
-    array('api_key', 'not_empty'), // or 'empty'
-  )
-  ```
-
-- **Numeric comparisons** (for `type:number`)
-  ```php
-  'require' => array(
-    array('retry_count', '>=', 3), // also >, <, <=
-  )
-  ```
-
-### Multiple rules with relation
-
-- **AND**
-  ```php
-  'require' => array(
-    'relation' => 'AND',
-    array('captcha_provider', '==', 'turnstile'),
-    array('captcha_on_login', '==', true),
-  )
-  ```
-
-- **OR**
-  ```php
-  'require' => array(
-    'relation' => 'OR',
-    array('mode', '==', 'sandbox'),
-    array('api_key', 'empty'),
-  )
-  ```
-
-> Use field **`id` values** in rules (not labels). For `select/buttonset`, compare against the **option keys**.
-
-## Examples 💡
-
-### Helper + General Tab
-
-```php
-function get_custom_options($field) {
-    return optionino_get('custom_settings', $field);
-}
-
-OPTNNO::set_tab('custom_settings', array(
-    'id'     => 'basic_settings',
-    'title'  => 'General Settings',
-    'desc'   => 'Basic options for the plugin configuration',
+// Create a tab with fields
+OPTNNO::set_tab('my_plugin_settings', array(
+    'id'     => 'general',
+    'title'  => 'General',
+    'icon'   => 'dashicons-admin-home',
     'fields' => array(
+        
+        // Text field
         array(
-            'id'      => 'site_title',
+            'id'      => 'site_name',
             'type'    => 'text',
-            'title'   => 'Site Title',
-            'default' => 'My WordPress Site',
+            'title'   => 'Site Name',
+            'default' => 'My Website',
         ),
+        
+        // Color picker
         array(
-            'id'      => 'enable_custom_style',
+            'id'      => 'primary_color',
+            'type'    => 'color',
+            'title'   => 'Primary Color',
+            'default' => '#0073aa',
+        ),
+        
+        // Switcher (on/off)
+        array(
+            'id'      => 'enable_feature',
             'type'    => 'switcher',
-            'title'   => 'Enable Custom Styles',
+            'title'   => 'Enable Feature',
             'default' => true,
         ),
-        array(
-            'id'      => 'style_provider',
-            'type'    => 'select',
-            'title'   => 'Style Provider',
-            'options' => array(
-                'classic' => 'Classic',
-                'modern'  => 'Modern',
-            ),
-            'default' => 'classic',
-            'require' => array(
-                array('enable_custom_style', '==', true),
-            ),
-        ),
-        array(
-            'id'      => 'advanced_color',
-            'type'    => 'color',
-            'title'   => 'Advanced Accent',
-            'default' => '#ff5733',
-            'require' => array(
-                'relation' => 'AND',
-                array('enable_custom_style', '==', true),
-                array('style_provider', 'in', array('modern')),
-            ),
-        ),
+        
     ),
 ));
 ```
 
-### Real-world conditional (like your SMS example)
+### Step 4: Load Settings File
+In your main plugin file, include the settings:
+
+```php
+<?php
+require_once plugin_dir_path( __FILE__ ) . 'inc/optionino-framework/optionino-framework.php';
+require_once plugin_dir_path( __FILE__ ) . 'inc/admin/settings.php';
+```
+
+### Step 5: Done! 🎉
+You'll now see a new menu item "My Settings" in WordPress admin.
+
+---
+
+## 📖 Getting Saved Values
+
+Use the helper function to retrieve saved values:
+
+```php
+// Get values
+$site_name = optionino_get('my_plugin_settings', 'site_name');
+$color = optionino_get('my_plugin_settings', 'primary_color');
+$is_enabled = optionino_get('my_plugin_settings', 'enable_feature');
+
+// Use in your code
+if ( $is_enabled ) {
+    echo '<h1 style="color: ' . esc_attr($color) . '">' . esc_html($site_name) . '</h1>';
+}
+```
+
+---
+
+## 🎨 Available Field Types
+
+| Field Type | Description | Code |
+|-----------|-------------|------|
+| `text` | Simple text input | `'type' => 'text'` |
+| `textarea` | Multi-line text | `'type' => 'textarea'` |
+| `number` | Number input | `'type' => 'number'` |
+| `color` | Color picker | `'type' => 'color'` |
+| `image` | Image uploader | `'type' => 'image'` |
+| `switcher` | On/off toggle | `'type' => 'switcher'` |
+| `select` | Dropdown menu | `'type' => 'select'` |
+| `buttonset` | Button group | `'type' => 'buttonset'` |
+| `tinymce` | WYSIWYG editor | `'type' => 'tinymce'` |
+| `repeater` | Repeatable fields | `'type' => 'repeater'` |
+
+### 🔸 Example: Select Dropdown
 
 ```php
 array(
-  'id'      => 'sms_credentials',
-  'type'    => 'textarea',
-  'title'   => 'SMS Credentials (JSON)',
-  'desc'    => 'Provide credentials for the selected provider.',
-  'require' => array(
-    array('sms_provider', 'in', array('farazsms','maxsms','modirpayamak','panelsmspro','rangine')),
-  ),
+    'id'      => 'user_role',
+    'type'    => 'select',
+    'title'   => 'User Role',
+    'options' => array(
+        'admin'  => 'Administrator',
+        'editor' => 'Editor',
+        'author' => 'Author',
+    ),
+    'default' => 'author',
 ),
 ```
 
-## Troubleshooting 🛠️
+### 🔸 Example: Image Upload
 
-- **Undefined array key "id" warnings:** Ensure **every field has an `id`** (even “note”-like fields).  
-- **Condition not working:** Double-check the controlling field’s **`id`** and compare to its **value** (option key), not label. For booleans (`switcher`), use `true/false`.  
-- **Assets 404:** Confirm the loader path and URLs. Clear caches / hard refresh.  
-- **Multiple copies:** The highest framework version should win; avoid double-including loaders manually.
+```php
+array(
+    'id'    => 'logo',
+    'type'  => 'image',
+    'title' => 'Site Logo',
+),
+```
 
-## License 📄
+**Get image URL:**
+```php
+$logo_url = optionino_get('my_plugin_settings', 'logo');
+echo '<img src="' . esc_url($logo_url) . '" alt="Logo">';
+```
 
-Optionino Framework is licensed under the **MIT License**. Use it freely in your projects. 💙
+### 🔸 Example: WYSIWYG Editor
+
+```php
+array(
+    'id'    => 'about_text',
+    'type'  => 'tinymce',
+    'title' => 'About Us',
+),
+```
+
+### 🔸 Example: Repeater Field
+
+Build lists of similar items (like social networks):
+
+```php
+array(
+    'id'     => 'social_networks',
+    'type'   => 'repeater',
+    'title'  => 'Social Networks',
+    'fields' => array(
+        array(
+            'id'    => 'network_name',
+            'type'  => 'text',
+            'title' => 'Network Name',
+        ),
+        array(
+            'id'    => 'network_url',
+            'type'  => 'text',
+            'title' => 'URL',
+        ),
+        array(
+            'id'    => 'network_icon',
+            'type'  => 'image',
+            'title' => 'Icon',
+        ),
+    ),
+),
+```
+
+**Get repeater data:**
+```php
+$socials = optionino_get('my_plugin_settings', 'social_networks');
+
+if ( is_array($socials) ) {
+    foreach ( $socials as $social ) {
+        echo '<a href="' . esc_url($social['network_url']) . '">';
+        echo esc_html($social['network_name']);
+        echo '</a>';
+    }
+}
+```
+
+---
+
+## 🔀 Conditional Fields
+
+Show/hide fields based on other field values:
+
+### Simple Condition:
+Show field only when switcher is enabled:
+
+```php
+array(
+    'id'      => 'enable_advanced',
+    'type'    => 'switcher',
+    'title'   => 'Enable Advanced Settings',
+    'default' => false,
+),
+array(
+    'id'      => 'advanced_option',
+    'type'    => 'text',
+    'title'   => 'Advanced Option',
+    'require' => array(
+        array('enable_advanced', '==', true)
+    ),
+),
+```
+
+### Advanced (Multiple Conditions):
+```php
+'require' => array(
+    'relation' => 'AND', // or 'OR'
+    array('enable_advanced', '==', true),
+    array('user_role', '==', 'admin'),
+),
+```
+
+---
+
+## 🗂️ Multiple Tabs
+
+Create multiple tabs to organize settings:
+
+```php
+// Tab 1: General
+OPTNNO::set_tab('my_plugin_settings', array(
+    'id'     => 'general',
+    'title'  => 'General',
+    'icon'   => 'dashicons-admin-home',
+    'fields' => array(
+        // Fields...
+    ),
+));
+
+// Tab 2: Appearance
+OPTNNO::set_tab('my_plugin_settings', array(
+    'id'     => 'appearance',
+    'title'  => 'Appearance',
+    'icon'   => 'dashicons-admin-appearance',
+    'fields' => array(
+        // Fields...
+    ),
+));
+
+// Tab 3: Advanced
+OPTNNO::set_tab('my_plugin_settings', array(
+    'id'     => 'advanced',
+    'title'  => 'Advanced',
+    'icon'   => 'dashicons-admin-tools',
+    'fields' => array(
+        // Fields...
+    ),
+));
+```
+
+---
+
+## 🎨 Custom Tab with PHP File
+
+Create a tab with completely custom content (dashboard, reports, etc.):
+
+```php
+OPTNNO::set_tab('my_plugin_settings', array(
+    'id'    => 'dashboard',
+    'title' => 'Dashboard',
+    'icon'  => 'dashicons-dashboard',
+    'file'  => plugin_dir_path(__FILE__) . 'inc/views/dashboard.php',
+));
+```
+
+Then create `inc/views/dashboard.php`:
+
+```php
+<div class="wrap">
+    <h2>Plugin Dashboard</h2>
+    <p>Your custom content here...</p>
+    
+    <?php
+    // Use WordPress functions
+    $count = wp_count_posts('post');
+    echo '<p>Total Posts: ' . $count->publish . '</p>';
+    ?>
+</div>
+```
+
+---
+
+## ⚙️ Advanced Configuration
+
+### Create Submenu
+Add settings page under an existing menu:
+
+```php
+OPTNNO::set_config('my_plugin_settings', array(
+    'menu_type'       => 'submenu',
+    'parent_slug'     => 'options-general.php',
+    'menu_title'      => 'My Plugin',
+    'page_title'      => 'My Plugin Settings',
+    'page_slug'       => 'my-plugin-settings',
+    'page_capability' => 'manage_options',
+));
+```
+
+**Common parent slugs:**
+- `options-general.php` - Settings
+- `themes.php` - Appearance
+- `plugins.php` - Plugins
+- `tools.php` - Tools
+- `users.php` - Users
+
+### Add Logo
+
+```php
+OPTNNO::set_config('my_plugin_settings', array(
+    'menu_title' => 'My Plugin',
+    'page_title' => 'Settings',
+    'logo_url'   => plugins_url('/assets/logo.svg', __FILE__),
+));
+```
+
+---
+
+## 🔌 Use in Multiple Plugins
+
+If multiple plugins use Optionino, **no conflicts occur**. The framework automatically uses the latest version.
+
+### Disable Demo Config
+
+If you're bundling the framework and don't want the demo to show:
+
+```php
+// Before loading optionino-framework.php
+define( 'OPTNNO_DISABLE_CONFIG', true );
+
+require_once plugin_dir_path( __FILE__ ) . 'inc/optionino-framework/optionino-framework.php';
+```
+
+---
+
+## 🔒 Security
+
+Built with enterprise-grade security:
+
+✅ **Nonce Verification** - CSRF attack prevention  
+✅ **Capability Check** - User permission verification  
+✅ **Data Sanitization** - Clean all inputs  
+✅ **Output Escaping** - XSS attack prevention  
+✅ **Directory Protection** - Secure file access  
+
+---
+
+## 🌐 Translation Support
+
+Fully translation-ready. Place your `.po` and `.mo` files in the `languages/` folder:
+
+```
+languages/
+  ├── optionino-fa_IR.po
+  └── optionino-fa_IR.mo
+```
+
+---
+
+## ❓ FAQ
+
+### How to reset all values?
+```php
+delete_option('my_plugin_settings');
+```
+
+### How to make a field optional?
+All fields are optional by default. Just set a default value:
+```php
+'default' => 'default value',
+```
+
+### How to disable a field?
+```php
+'attributes' => array(
+    'disabled' => 'disabled',
+),
+```
+
+### How to add placeholder text?
+```php
+'attributes' => array(
+    'placeholder' => 'Enter text here...',
+),
+```
+
+---
+
+## 📦 Complete Example
+
+```php
+<?php
+/**
+ * Plugin Name: Example Plugin
+ */
+
+// 1. Load Framework
+require_once plugin_dir_path( __FILE__ ) . 'inc/optionino-framework/optionino-framework.php';
+
+// 2. Configure Page
+OPTNNO::set_config('example_plugin', array(
+    'menu_title' => 'Example Plugin',
+    'page_title' => 'Settings',
+    'page_slug'  => 'example-plugin',
+    'logo_url'   => plugins_url('/logo.svg', __FILE__),
+));
+
+// 3. General Tab
+OPTNNO::set_tab('example_plugin', array(
+    'id'     => 'general',
+    'title'  => 'General',
+    'fields' => array(
+        array(
+            'id'      => 'enable',
+            'type'    => 'switcher',
+            'title'   => 'Enable',
+            'default' => true,
+        ),
+        array(
+            'id'      => 'api_key',
+            'type'    => 'text',
+            'title'   => 'API Key',
+        ),
+    ),
+));
+
+// 4. Appearance Tab
+OPTNNO::set_tab('example_plugin', array(
+    'id'     => 'style',
+    'title'  => 'Appearance',
+    'fields' => array(
+        array(
+            'id'      => 'color',
+            'type'    => 'color',
+            'title'   => 'Primary Color',
+            'default' => '#ff5722',
+        ),
+        array(
+            'id'      => 'logo',
+            'type'    => 'image',
+            'title'   => 'Logo',
+        ),
+    ),
+));
+
+// 5. Use in Code
+function my_plugin_init() {
+    $is_enabled = optionino_get('example_plugin', 'enable');
+    
+    if ( $is_enabled ) {
+        $api_key = optionino_get('example_plugin', 'api_key');
+        // Your code...
+    }
+}
+add_action('init', 'my_plugin_init');
+```
+
+---
+
+## 📄 License
+
+MIT License
+
+## 🤝 Contributing
+
+Report bugs or suggest improvements in the Issues section.
+
+---
+
+**Made with ❤️ for WordPress Developers**

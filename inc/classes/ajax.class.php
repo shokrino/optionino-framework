@@ -47,7 +47,6 @@ if ( ! class_exists( 'OPTNNO_Ajax_Handler', false ) ) {
 
         public function __construct() {
             add_action( 'wp_ajax_save_optionino_data',        array( $this, 'save_optionino_data' ) );
-            add_action( 'wp_ajax_nopriv_save_optionino_data', array( $this, 'save_optionino_data' ) );
         }
 
         /**
@@ -55,6 +54,10 @@ if ( ! class_exists( 'OPTNNO_Ajax_Handler', false ) ) {
          */
         public static function save_optionino_data() {
             check_ajax_referer( 'optionino_nonce', 'security' );
+
+            if ( ! current_user_can( 'manage_options' ) ) {
+                wp_send_json_error( array( 'message' => __( 'Permission denied.', OPTNNO_TEXTDOMAIN ) ) );
+            }
 
             $dev_name = isset( $_POST['dev_name'] ) ? sanitize_text_field( wp_unslash( $_POST['dev_name'] ) ) : '';
             $data     = $_POST;
@@ -108,7 +111,7 @@ if ( ! class_exists( 'OPTNNO_Ajax_Handler', false ) ) {
                         break;
 
                     case 'tinymce':
-                        $sanitized_value = is_string( $data[ $field_id ] ) ? wp_unslash( $data[ $field_id ] ) : '';
+                        $sanitized_value = is_string( $data[ $field_id ] ) ? wp_kses_post( wp_unslash( $data[ $field_id ] ) ) : '';
                         break;
 
                     case 'color':
@@ -117,7 +120,7 @@ if ( ! class_exists( 'OPTNNO_Ajax_Handler', false ) ) {
 
                     default:
                         $field_value     = sanitize_text_field( wp_unslash( $data[ $field_id ] ) );
-                        $sanitized_value = esc_html( $field_value );
+                        $sanitized_value = $field_value;
                         break;
                 }
 
@@ -130,7 +133,7 @@ if ( ! class_exists( 'OPTNNO_Ajax_Handler', false ) ) {
 
             self::save_data( $dev_name, $data_to_save );
 
-            wp_send_json_success( array( 'message' => __( 'تنظیمات با موفقیت ذخیره شد!', OPTNNO_TEXTDOMAIN ) ) );
+            wp_send_json_success( array( 'message' => __( 'Data saved successfully!', OPTNNO_TEXTDOMAIN ) ) );
         }
 
         /**

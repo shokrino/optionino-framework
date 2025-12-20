@@ -17,6 +17,6 @@ defined( 'ABSPATH' ) || exit;
 require_once __DIR__ . '/inc/loader.php';
 
 $__opt_cfg = __DIR__ . '/config.php';
-if ( file_exists( $__opt_cfg ) ) {
+if ( file_exists( $__opt_cfg ) && ! defined( 'OPTNNO_DISABLE_CONFIG' ) ) {
     include_once $__opt_cfg;
 }

@@ -27,16 +27,26 @@ class OPTNNO {
         }
         public function setup_defaults() {
             $get_fields = self::$fields;
+            
             foreach ($get_fields as $dev_name => $tabs) {
+                $saved_data = get_option($dev_name, array());
+                if (!is_array($saved_data)) {
+                    $saved_data = array();
+                }
+                
+                $is_updated = false;
+
                 foreach ($tabs as $tab_name => $arrays) {
                     foreach ($arrays as $names => $field) {
-                        $field_value = optionino_get($dev_name,$field['id']);
-                        if (empty($field_value) && !empty($field['default'])) {
-                            $saved_data = get_option($dev_name, array());
+                        if ( ! array_key_exists($field['id'], $saved_data) && isset($field['default']) ) {
                             $saved_data[$field['id']] = $field['default'];
-                            update_option($dev_name, $saved_data);
+                            $is_updated = true;
                         }
                     }
+                }
+
+                if ($is_updated) {
+                    update_option($dev_name, $saved_data);
                 }
             }
         }
@@ -166,7 +176,17 @@ class OPTNNO {
             _e('Options Page powered by <a href="https://github.com/shokrino/optionino-framework" target="_blank">Optionino Framework</a>',OPTNNO_TEXTDOMAIN);
         }
         public function optionino_load_textdomain() {
-            load_plugin_textdomain( OPTNNO_TEXTDOMAIN, false,basename( OPTNNO_PATH ) . '/languages/' );
+            $locale = is_admin() && function_exists( 'get_user_locale' ) ? get_user_locale() : get_locale();
+            $locale = apply_filters( 'plugin_locale', $locale, OPTNNO_TEXTDOMAIN );
+            
+            $mofile = OPTNNO_LANG . 'optionino-' . $locale . '.mo';
+            
+            if ( file_exists( $mofile ) ) {
+                load_textdomain( OPTNNO_TEXTDOMAIN, $mofile );
+            } else {
+                $plugin_rel_path = str_replace( WP_PLUGIN_DIR . '/', '', OPTNNO_LANG );
+                load_plugin_textdomain( OPTNNO_TEXTDOMAIN, false, dirname( $plugin_rel_path ) . '/languages' );
+            }
         }
         public function wp_scripts() {
             wp_enqueue_script('jquery');

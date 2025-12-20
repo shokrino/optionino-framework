@@ -83,7 +83,7 @@ msgstr "تغییرات با موفقیت ذخیره شد!"
 
 #: inc/classes/ajax.class.php:34
 msgid "Invalid dev name!"
-msgstr "Invalid dev name!"
+msgstr "نام توسعه دهنده نامعتبر است!"
 
 #: inc/classes/ajax.class.php:37
 msgid "Invalid data received!"
@@ -133,3 +133,12 @@ msgstr "ابزار حرفه ای برای توسعه راحت تر افزونه 
 #. Author of the plugin/theme
 msgid "Shokrino Team"
 msgstr "تیم شکرینو"
+
+msgid "Delete"
+msgstr "حذف"
+
+msgid "Upload Image"
+msgstr "آپلود تصویر"
+
+msgid "Permission denied."
+msgstr "اجازه دسترسی ندارید."
