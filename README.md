@@ -33,8 +33,10 @@ Add this to your main plugin file:
 
 ```php
 <?php
-// Load Optionino Framework
-require_once plugin_dir_path( __FILE__ ) . 'inc/optionino-framework/optionino-framework.php';
+// Load Optionino Framework (only if not already loaded)
+if ( ! class_exists( 'OPTNNO' ) ) {
+    require_once plugin_dir_path( __FILE__ ) . 'inc/optionino-framework/optionino-framework.php';
+}
 ```
 
 ### Step 3: Create Your First Settings Page
@@ -91,8 +93,15 @@ In your main plugin file, include the settings:
 
 ```php
 <?php
-require_once plugin_dir_path( __FILE__ ) . 'inc/optionino-framework/optionino-framework.php';
-require_once plugin_dir_path( __FILE__ ) . 'inc/admin/settings.php';
+// Load framework only if not already loaded
+if ( ! class_exists( 'OPTNNO' ) ) {
+    require_once plugin_dir_path( __FILE__ ) . 'inc/optionino-framework/optionino-framework.php';
+}
+
+// Load your settings (only if framework is available)
+if ( class_exists( 'OPTNNO' ) ) {
+    require_once plugin_dir_path( __FILE__ ) . 'inc/admin/settings.php';
+}
 ```
 
 ### Step 5: Done! 🎉
@@ -366,10 +375,13 @@ If multiple plugins use Optionino, **no conflicts occur**. The framework automat
 If you're bundling the framework and don't want the demo to show:
 
 ```php
-// Before loading optionino-framework.php
+// Disable demo config before loading
 define( 'OPTNNO_DISABLE_CONFIG', true );
 
-require_once plugin_dir_path( __FILE__ ) . 'inc/optionino-framework/optionino-framework.php';
+// Load framework only if not already loaded
+if ( ! class_exists( 'OPTNNO' ) ) {
+    require_once plugin_dir_path( __FILE__ ) . 'inc/optionino-framework/optionino-framework.php';
+}
 ```
 
 ---
@@ -435,8 +447,15 @@ All fields are optional by default. Just set a default value:
  * Plugin Name: Example Plugin
  */
 
-// 1. Load Framework
-require_once plugin_dir_path( __FILE__ ) . 'inc/optionino-framework/optionino-framework.php';
+// 1. Load Framework (only if not already loaded)
+if ( ! class_exists( 'OPTNNO' ) ) {
+    require_once plugin_dir_path( __FILE__ ) . 'inc/optionino-framework/optionino-framework.php';
+}
+
+// Stop if framework is not available
+if ( ! class_exists( 'OPTNNO' ) ) {
+    return;
+}
 
 // 2. Configure Page
 OPTNNO::set_config('example_plugin', array(
@@ -508,4 +527,4 @@ Report bugs or suggest improvements in the Issues section.
 
 ---
 
-**Made with ❤️ for WordPress Developers**
+**Made with ❤️ for WordPress Developers By Shokrino**

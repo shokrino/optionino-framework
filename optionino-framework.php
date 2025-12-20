@@ -5,7 +5,7 @@ defined( 'ABSPATH' ) || exit;
  * Plugin URI: https://shokrino.com/
  * Author: Shokrino Team
  * Author URI: https://shokrino.com/
- * Version: 1.0.0
+ * Version: 1.0.1
  * Text Domain: optionino
  * Domain Path: /languages
  * Description: Professional Tool to develop your WordPress theme and plugin easier
