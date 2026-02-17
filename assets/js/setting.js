@@ -181,47 +181,137 @@ document.addEventListener("DOMContentLoaded", function() {
   const mo = new MutationObserver(function(){ updateAll(); });
   mo.observe(document.body, {subtree:true, childList:true, attributes:true, attributeFilter:['checked','value']});
 
+  function initColorPickers(context) {
+    if (window.jQuery && jQuery.fn.wpColorPicker) {
+      const $context = context ? jQuery(context) : jQuery(document);
+      $context.find('.optionino-color-selector').each(function(){
+        if (!jQuery(this).closest('.wp-picker-container').length) {
+          jQuery(this).wpColorPicker();
+        }
+      });
+    }
+  }
+
   document.addEventListener('click', function(event) {
-    if (event.target.classList.contains('optionino-add-repeater-item')) {
+    if (event.target.closest('.optionino-add-repeater-item')) {
       event.preventDefault();
-      const field = event.target.closest('.optionino-repeater-field');
+      const button = event.target.closest('.optionino-add-repeater-item');
+      const field = button.closest('.optionino-repeater-field');
       if (!field) return;
       const repeaterContainer = field.querySelector('.optionino-repeater-container');
-      const template = repeaterContainer.querySelector('.optionino-repeater-item');
+      const items = repeaterContainer.querySelectorAll('.optionino-repeater-item');
       let newItem;
-      if (template) {
-        const index = repeaterContainer.querySelectorAll('.optionino-repeater-item').length;
+      
+      if (items.length > 0) {
+        const template = items[0];
+        const index = items.length;
         newItem = template.cloneNode(true);
-        newItem.querySelectorAll('input, textarea, select').forEach(function(input){
-          const idParts = (input.id || '').split('_'); idParts.pop(); idParts.push(index); input.id = idParts.join('_');
-          const nameParts = (input.name || '').split('_'); nameParts.pop(); nameParts.push(index); input.name = nameParts.join('_');
-          if (input.type === 'checkbox' || input.type === 'radio') { input.checked = false; } else { input.value = ''; }
+        
+        const pickers = newItem.querySelectorAll('.wp-picker-container');
+        pickers.forEach(function(picker){
+          const input = picker.querySelector('input.optionino-color-selector');
+          if (input) {
+            picker.parentNode.insertBefore(input, picker);
+            picker.remove();
+          }
         });
+
+        newItem.querySelectorAll('input, textarea, select').forEach(function(input){
+          const idParts = (input.id || '').split('_'); 
+          if (!isNaN(parseInt(idParts[idParts.length-1]))) {
+             idParts.pop(); 
+          }
+          idParts.push(index); 
+          const newId = idParts.join('_');
+          input.id = newId;
+          
+          const nameParts = (input.name || '').split('_'); 
+          if (!isNaN(parseInt(nameParts[nameParts.length-1]))) {
+             nameParts.pop();
+          }
+          nameParts.push(index); 
+          input.name = nameParts.join('_');
+          
+          if (input.type === 'checkbox' || input.type === 'radio') { 
+            input.checked = false; 
+            if (input.classList.contains('optionino-switch-checkbox')) {
+               const label = newItem.querySelector('label[for="' + idParts.slice(0, -1).join('_') + '_' + (index > 0 ? 0 : 0) + '"]'); 
+               const siblingLabel = input.nextElementSibling;
+               if (siblingLabel && siblingLabel.tagName === 'LABEL') {
+                 siblingLabel.setAttribute('for', newId);
+               }
+            }
+          } else { 
+            input.value = ''; 
+          }
+        });
+      
+        newItem.querySelectorAll('label').forEach(function(label){
+            const forAttr = label.getAttribute('for');
+            if (forAttr) {
+                const parts = forAttr.split('_');
+                if (!isNaN(parseInt(parts[parts.length-1]))) {
+                    parts.pop();
+                    parts.push(index);
+                    label.setAttribute('for', parts.join('_'));
+                }
+            }
+        });
+
+        newItem.querySelectorAll('.optionino-image-preview').forEach(function(img){
+            const id = img.id;
+            const parts = id.split('-');
+            const prefix = parts[0].split('_');
+            if (!isNaN(parseInt(prefix[prefix.length-1]))) {
+                 prefix.pop();
+            }
+            prefix.push(index);
+            img.id = prefix.join('_') + '-preview';
+            img.src = '';
+        });
+        
+        newItem.querySelectorAll('.upload-image-button').forEach(function(btn){
+             const oldData = btn.getAttribute('data-image-field');
+             if (oldData) {
+                 const parts = oldData.split('_');
+                 if (!isNaN(parseInt(parts[parts.length-1]))) {
+                    parts.pop();
+                 }
+                 parts.push(index);
+                 btn.setAttribute('data-image-field', parts.join('_'));
+             }
+        });
+
       } else {
         newItem = document.createElement('div');
         newItem.className = 'optionino-repeater-item';
         newItem.innerHTML = '<div>New item</div>';
       }
       repeaterContainer.appendChild(newItem);
+      
+      initColorPickers(newItem);
+      
       updateAll();
     }
-    if (event.target.classList.contains('optionino-remove-repeater-item')) {
+    if (event.target.classList.contains('optionino-remove-repeater-item') || event.target.closest('.optionino-remove-repeater-item')) {
       event.preventDefault();
-      const field = event.target.closest('.optionino-repeater-field');
+      const button = event.target.closest('.optionino-remove-repeater-item') || event.target;
+      const field = button.closest('.optionino-repeater-field');
       if (!field) return;
       const container = field.querySelector('.optionino-repeater-container');
       const items = container.querySelectorAll('.optionino-repeater-item');
       if (items.length > 1) {
-        event.target.closest('.optionino-repeater-item').remove();
+        button.closest('.optionino-repeater-item').remove();
         updateAll();
       }
     }
   });
 
   const fileFrames = {};
-  document.querySelectorAll('.upload-image-button').forEach(function(button) {
-    button.addEventListener('click', function(event) {
+  document.addEventListener('click', function(event) {
+    if (event.target.classList.contains('upload-image-button')) {
       event.preventDefault();
+      const button = event.target;
       const identifier = button.getAttribute('data-image-field');
       if (fileFrames[identifier]) { fileFrames[identifier].open(); return; }
       if (!window.wp || !wp.media) return;
@@ -239,13 +329,8 @@ document.addEventListener("DOMContentLoaded", function() {
         if (typeof wpMediaPostId !== 'undefined') wp.media.model.settings.post.id = wpMediaPostId;
       });
       fileFrames[identifier].open();
-    });
+    }
   });
 
-  if (window.jQuery) {
-    jQuery(function($){
-      const colorFields = $('.optionino-color-selector');
-      if (colorFields.length > 0) colorFields.wpColorPicker();
-    });
-  }
+  initColorPickers();
 });
