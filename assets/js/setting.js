@@ -65,20 +65,36 @@ document.addEventListener("DOMContentLoaded", function() {
         return parsed.rules.map(function(r){ return [String(r[0]||''), String((r[1]||'=')).toLowerCase(), (typeof r[2]==='string'? r[2] : JSON.stringify(r[2]))]; });
       }
     }
+    var triples = [];
+    var attrs = Array.prototype.slice.call(box.attributes || []);
+    var indexedRequires = attrs
+      .map(function(attr){
+        var m = /^data-require-(\d+)$/.exec(attr.name);
+        if (!m) return null;
+        return { idx: parseInt(m[1], 10), raw: attr.value };
+      })
+      .filter(function(item){ return item !== null; })
+      .sort(function(a,b){ return a.idx - b.idx; });
+
+    indexedRequires.forEach(function(item){
+      var parsed = null;
+      try { parsed = JSON.parse(String(item.raw).replace(/&quot;/g, '"')); } catch(e){}
+      if (Array.isArray(parsed)) {
+        var f = String(parsed[0] || '');
+        var op = String((parsed[1] || '=')).toLowerCase();
+        var v = parsed[2];
+        var vRaw = (typeof v === 'string') ? v : JSON.stringify(v);
+        triples.push([f, op, vRaw]);
+      }
+    });
+
+    if (triples.length) return triples;
+
     var r0 = box.getAttribute('data-require-0');
     if (!r0) return [];
-    var parsed0 = null;
-    try { parsed0 = JSON.parse(String(r0).replace(/&quot;/g, '"')); } catch(e){}
-    if (Array.isArray(parsed0)) {
-      var f = String(parsed0[0] || '');
-      var op = String((parsed0[1] || '=')).toLowerCase();
-      var v  = parsed0[2];
-      var vRaw = (typeof v === 'string') ? v : JSON.stringify(v);
-      return [[f, op, vRaw]];
-    }
     var opAttr = box.getAttribute('data-require-1') || '"="';
-    var vAttr  = box.getAttribute('data-require-2') || '""';
-    var f2  = String(r0).replace(/&quot;/g, '"').trim();
+    var vAttr = box.getAttribute('data-require-2') || '""';
+    var f2 = String(r0).replace(/&quot;/g, '"').trim();
     if (f2[0] === '"' && f2[f2.length - 1] === '"') f2 = f2.slice(1, -1);
     var op2 = String(opAttr).replace(/&quot;/g, '"').trim();
     if (op2[0] === '"' && op2[op2.length - 1] === '"') op2 = op2.slice(1, -1);
