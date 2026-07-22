@@ -169,7 +169,7 @@ class OPTNNO {
             }
         }
         public function page_content($settings) {
-            require_once ( defined('OPTNNO_TMPL') ? OPTNNO_TMPL : ( defined('OPTNNO_INC') ? OPTNNO_INC . 'templates/' : __DIR__ . '/../templates/' ) ) . 'setting-page.php';
+            require_once ( defined('optnno_tmpl()') ? optnno_tmpl() : ( defined('optnno_inc()') ? optnno_inc() . 'templates/' : __DIR__ . '/../templates/' ) ) . 'setting-page.php';
             add_filter( 'admin_footer_text', [$this,'admin_footer_text'] );
         }
         public function admin_footer_text() {
@@ -179,12 +179,12 @@ class OPTNNO {
             $locale = is_admin() && function_exists( 'get_user_locale' ) ? get_user_locale() : get_locale();
             $locale = apply_filters( 'plugin_locale', $locale, OPTNNO_TEXTDOMAIN );
             
-            $mofile = OPTNNO_LANG . 'optionino-' . $locale . '.mo';
+            $mofile = optnno_path() . 'languages/' . 'optionino-' . $locale . '.mo';
             
             if ( file_exists( $mofile ) ) {
                 load_textdomain( OPTNNO_TEXTDOMAIN, $mofile );
             } else {
-                $plugin_rel_path = str_replace( WP_PLUGIN_DIR . '/', '', OPTNNO_LANG );
+                $plugin_rel_path = str_replace( WP_PLUGIN_DIR . '/', '', optnno_path() . 'languages/' );
                 load_plugin_textdomain( OPTNNO_TEXTDOMAIN, false, dirname( $plugin_rel_path ) . '/languages' );
             }
         }
@@ -197,8 +197,8 @@ class OPTNNO {
             }
             wp_enqueue_style('wp-color-picker');
             wp_enqueue_script('wp-color-picker');
-            wp_enqueue_style( 'optionino-settings-page', OPTNNO_ASSETS.'css/setting.css', array(), false, 'all');
-            wp_enqueue_script( 'optionino-settings-page', OPTNNO_ASSETS.'js/setting.js' , array() , false , true);
+            wp_enqueue_style( 'optionino-settings-page', optnno_assets().'css/setting.min.css', array(), false, 'all');
+            wp_enqueue_script( 'optionino-settings-page', optnno_assets().'js/setting.min.js' , array() , false , true);
             wp_localize_script( 'optionino-settings-page', 'data_optionino', array(
                 'ajax_url' => admin_url( 'admin-ajax.php' ),
                 'nonce' => wp_create_nonce('optionino_nonce')

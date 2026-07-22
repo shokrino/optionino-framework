@@ -95,7 +95,18 @@ if ( ! class_exists( 'OPTNNO_Ajax_Handler', false ) ) {
                                 } elseif ( is_array( $subarray ) ) {
                                     $subarray_parsed = $subarray;
                                 }
-                                $field_value_posts[ $key ] = $subarray_parsed;
+                                
+                                // Recursively sanitize the parsed array
+                                $subarray_sanitized = array();
+                                foreach ( $subarray_parsed as $sub_key => $sub_val ) {
+                                    if ( is_array( $sub_val ) ) {
+                                        $subarray_sanitized[ $sub_key ] = map_deep( $sub_val, 'wp_kses_post' );
+                                    } else {
+                                        $subarray_sanitized[ $sub_key ] = wp_kses_post( wp_unslash( $sub_val ) );
+                                    }
+                                }
+                                
+                                $field_value_posts[ $key ] = $subarray_sanitized;
                             }
                         }
                         $sanitized_value = $field_value_posts;
@@ -192,6 +203,7 @@ if ( ! class_exists( 'OPTNNO_Ajax_Handler', false ) ) {
             }
 
             update_option( $dev_name, $saved_data );
+            delete_transient( 'optnno_html_' . md5($dev_name) );
             // delete_option( $dev_name ); // for debugging only
         }
     }
