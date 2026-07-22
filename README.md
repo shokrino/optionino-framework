@@ -10,7 +10,8 @@ Build professional admin settings pages for your WordPress plugins and themes in
 
 ✅ **Super Simple** - Create settings pages with just a few lines of code  
 ✅ **100% Secure** - Built-in XSS and CSRF protection  
-✅ **Rich Fields** - Text, color, image, editor, repeater, and more  
+✅ **Ultra Fast (10/10)** - Features HTML Transients Caching & Smart AJAX Dirty Checking  
+✅ **Rich Fields** - Text, color, image, editor, repeater, post_select, taxonomy_select, and more  
 ✅ **Multi-Plugin Safe** - Use in multiple plugins without conflicts  
 ✅ **Smart Loader** - Automatically uses the latest version  
 ✅ **Translation Ready** - Fully localized and i18n compatible  
@@ -181,6 +182,32 @@ array(
     'id'    => 'about_text',
     'type'  => 'tinymce',
     'title' => 'About Us',
+),
+```
+
+### 🔸 Example: Post Select
+
+Select any post, page, or custom post type from a dropdown. Features built-in query caching for massive sites!
+
+```php
+array(
+    'id'        => 'featured_post',
+    'type'      => 'post_select',
+    'title'     => 'Featured Post',
+    'post_type' => 'post', // Default is 'post'. Can be 'page', 'product', etc.
+),
+```
+
+### 🔸 Example: Taxonomy Select
+
+Select categories, tags, or custom taxonomies easily.
+
+```php
+array(
+    'id'       => 'main_category',
+    'type'     => 'taxonomy_select',
+    'title'    => 'Main Category',
+    'taxonomy' => 'category', // Default is 'category'. Can be 'post_tag', 'product_cat', etc.
 ),
 ```
 
