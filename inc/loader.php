@@ -64,6 +64,24 @@ if ( ! defined( 'OPTNNO_TEXTDOMAIN' ) ) {
     define( 'OPTNNO_TEXTDOMAIN', 'optionino' );
 }
 
+if ( ! function_exists( 'optnno_url' ) ) {
+    function optnno_url() {
+        if ( isset( $GLOBALS['__OPTNNO_REGISTRY__']['active']['file'] ) ) {
+            return trailingslashit( plugins_url( '', $GLOBALS['__OPTNNO_REGISTRY__']['active']['file'] ) );
+        }
+        return OPTNNO_URL;
+    }
+    function optnno_path() {
+        if ( isset( $GLOBALS['__OPTNNO_REGISTRY__']['active']['base_dir'] ) ) {
+            return rtrim( $GLOBALS['__OPTNNO_REGISTRY__']['active']['base_dir'], '/\\' ) . '/';
+        }
+        return OPTNNO_PATH;
+    }
+    function optnno_assets() { return optnno_url() . 'assets/'; }
+    function optnno_inc() { return optnno_path() . 'inc/'; }
+    function optnno_tmpl() { return optnno_inc() . 'templates/'; }
+}
+
 if ( ! $__OPTNNO_SKIP ) {
     
     if ( ! function_exists( 'optionino_get' ) ) {
@@ -82,8 +100,30 @@ if ( ! $__OPTNNO_SKIP ) {
     if ( ! class_exists( 'OPTNNO', false ) && file_exists( OPTNNO_CLSS . 'core.class.php' ) ) {
         @include_once OPTNNO_CLSS . 'core.class.php';
     }
+    if ( file_exists( OPTNNO_CLSS . 'fields.php' ) ) {
+        @include_once OPTNNO_CLSS . 'fields.php';
+    }
 
     $reg['active'] = $__OPTNNO_BUNDLE;
+}
+
+if ( ! defined( 'OPTNNO_PATH' ) ) {
+    define( 'OPTNNO_PATH', optnno_path() );
+}
+if ( ! defined( 'OPTNNO_URL' ) ) {
+    define( 'OPTNNO_URL', optnno_url() );
+}
+if ( ! defined( 'OPTNNO_ASSETS' ) ) {
+    define( 'OPTNNO_ASSETS', optnno_assets() );
+}
+if ( ! defined( 'OPTNNO_INC' ) ) {
+    define( 'OPTNNO_INC', optnno_inc() );
+}
+if ( ! defined( 'OPTNNO_TMPL' ) ) {
+    define( 'OPTNNO_TMPL', optnno_tmpl() );
+}
+if ( ! defined( 'OPTNNO_CLSS' ) ) {
+    define( 'OPTNNO_CLSS', optnno_path() . 'inc/classes/' );
 }
 
 if ( ! function_exists( 'optionino_loader_info' ) ) {
